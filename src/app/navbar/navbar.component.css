@@ -1,0 +1,14 @@
+.fill-remaining-space {
+  /*This fills the remaining space, by using flexbox.  
+   Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+.user-avatar {
+  border-radius: 50%;
+  max-width: 50px;
+}
+
+#avatar-button {
+  height: 50px;
+}
