@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  apiEndoint: 'http://localhost:8080/api'
+  apiEndoint: 'http://localhost:8080/api',
+  signupEndpoint: '/auth/signup',
+  checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability'
 };
 
 /*
