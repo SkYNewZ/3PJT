@@ -1,29 +1,69 @@
 <div class="signin-content">
   <mat-card>
+    <mat-card-title>File Manager</mat-card-title>
+    <mat-card-subtitle>Please login to continue</mat-card-subtitle>
     <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-tab-group [(selectedIndex)]="selectedTab">
 
-        <mat-card-title>File Manager</mat-card-title>
+        <mat-tab label="Login">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="User" formControlName="userName" required>
+              <mat-error *ngIf="isFieldInvalid('userName', form)">
+                Please inform your user name
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput type="password" placeholder="Password" formControlName="password" required>
+              <mat-error *ngIf="isFieldInvalid('userName', form)">
+                Please inform your password
+              </mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" class="button-margin">Login</button>
+          </form>
+        </mat-tab>
 
-        <mat-card-subtitle>Please login to continue</mat-card-subtitle>
-        <mat-form-field class="full-width-input">
-          <input matInput placeholder="User" formControlName="userName" required>
-          <mat-error *ngIf="isFieldInvalid('userName')">
-            Please inform your user name
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="full-width-input">
-          <input matInput type="password" placeholder="Password" formControlName="password" required>
-          <mat-error *ngIf="isFieldInvalid('userName')">
-            Please inform your password
-          </mat-error>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit">Login</button>
-      </form>
+        <mat-tab label="Register">
+          <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Username" formControlName="username" required>
+              <mat-error *ngIf="isFieldInvalid('username', registerForm)">
+                Please inform your user name
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Firstname" formControlName="firstName" required>
+              <mat-error *ngIf="isFieldInvalid('firstName', registerForm)">
+                Please inform your firstname
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Lastname" formControlName="lastName" required>
+              <mat-error *ngIf="isFieldInvalid('firstName', registerForm)">
+                Please inform your lastname
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Email" formControlName="email" required>
+              <mat-error *ngIf="isFieldInvalid('email', registerForm)">
+                Please inform your email
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput type="password" placeholder="Password" formControlName="password" required>
+              <mat-error *ngIf="isInvalidPassword()">
+                Password must contain at leat 5 characters and 40 characters
+              </mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" class="button-margin">Register</button>
+          </form>
+        </mat-tab>
+
+      </mat-tab-group>
     </mat-card-content>
-    
+
     <mat-card-content>
-      <mat-card-subtitle>Or connect with Social Media</mat-card-subtitle>
+      <mat-card-subtitle>Or connect with :</mat-card-subtitle>
       <div xLayout="row" fxLayoutAlign="space-evenly center">
         <button mat-raised-button color="link">
           <i class="fa fa-google-plus-official" style="color: #d62d20" aria-hidden="true"></i> Google+</button>
