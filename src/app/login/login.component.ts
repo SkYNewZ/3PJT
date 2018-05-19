@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe((login) => {
         this.selectedTab = 0;
-        this.form.get('userName').patchValue(this.registerForm.get('username').value);
+        this.form.get('usernameOrEmail').patchValue(this.registerForm.get('username').value);
         this.registerForm.reset();
         this.openSnackBar('Registration successfully');
       }, (err: any) => {
