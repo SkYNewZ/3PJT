@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  apiEndoint: 'http://supdrive.lemairepro.fr/api'
+  apiEndoint: 'https://supdrive.lemairepro.fr/api',
+  signupEndpoint: '/auth/signup',
+  checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability'
 };
