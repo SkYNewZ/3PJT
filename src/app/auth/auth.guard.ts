@@ -28,13 +28,14 @@ export class AuthGuard implements CanActivate {
     return this.authService.isLoggedIn.take(1).map((user: UserApp) => {
       const token: string = localStorage.getItem('access_token');
       if (this.jwtService.isTokenExpired(token)) {
-        this.router.navigateByUrl('/login');
+        this.router.navigate(['login'], { queryParams: { redirect_uri: state.url } });
         return false;
       } else if (!user.$email) {
-        this.router.navigateByUrl('/login');
+        this.router.navigate(['login'], { queryParams: { redirect_uri: state.url } });
         return false;
+      } else {
+        return true;
       }
-      return true;
     });
   }
 }

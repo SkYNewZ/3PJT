@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material';
 import { JwtApp } from '../models/jwt';
 import { UserProfileService } from '../user-profile/user-profile.service';
 import { UserApp } from '../models/main-user';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
   private registerFormSubmitAttempt: boolean;
   public registerForm: FormGroup;
   public selectedTab = 0;
+  public returnUrl: string;
 
   constructor(
     private fb: FormBuilder,
@@ -31,14 +32,16 @@ export class LoginComponent implements OnInit {
     private userProfileService: UserProfileService,
     private router: Router,
     private jwtService: JwtHelperService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    this.returnUrl = this.route.snapshot.queryParams['redirect_uri'] || '/';
     const t = this.jwtService.tokenGetter();
     if (!this.jwtService.isTokenExpired(t)) {
       this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
         this.authService.login(user);
-        this.router.navigateByUrl('');
+        this.router.navigateByUrl(this.returnUrl);
       }, (err) => {
         if (err instanceof HttpErrorResponse && err.status === 401) {
           this.openSnackBar('Session Expired');
@@ -84,7 +87,7 @@ export class LoginComponent implements OnInit {
         // get user info, token will be add by @auth0/angular-jwt
         this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
           this.authService.login(user);
-          this.router.navigateByUrl('');
+          this.router.navigateByUrl(this.returnUrl);
         });
       }, (err) => {
         if (err instanceof HttpErrorResponse && err.status === 401) {
