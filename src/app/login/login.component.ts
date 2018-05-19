@@ -10,6 +10,7 @@ import { JwtApp } from '../models/jwt';
 import { UserProfileService } from '../user-profile/user-profile.service';
 import { UserApp } from '../models/main-user';
 import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-login',
@@ -28,10 +29,25 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private userProfileService: UserProfileService,
-    private router: Router
+    private router: Router,
+    private jwtService: JwtHelperService,
   ) { }
 
   ngOnInit() {
+    const t = this.jwtService.tokenGetter();
+    if (!this.jwtService.isTokenExpired(t)) {
+      this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
+        this.authService.login(user);
+        this.router.navigateByUrl('');
+      }, (err) => {
+        if (err instanceof HttpErrorResponse && err.status === 401) {
+          this.openSnackBar('Session Expired');
+          this.form.reset();
+        } else {
+          console.log(err);
+        }
+      });
+    }
     this.form = this.fb.group({
       usernameOrEmail: ['', Validators.required],
       password: ['', Validators.required]
@@ -43,6 +59,7 @@ export class LoginComponent implements OnInit {
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(40)])]
     });
+
   }
 
   isFieldInvalid(field: string, form: FormGroup): boolean {
