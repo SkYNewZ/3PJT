@@ -7,12 +7,15 @@ import { Observable } from 'rxjs';
 import { LoginSuccess } from '../models/login-success';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { UserApp } from '../models/main-user';
+import { JwtApp } from '../models/jwt';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
+  private user: BehaviorSubject<UserApp> = new BehaviorSubject<UserApp>(new UserApp());
 
   constructor(
     private router: Router,
@@ -20,18 +23,25 @@ export class AuthService {
   ) { }
 
   get isLoggedIn() {
-    return this.loggedIn.asObservable();
+    return this.user.asObservable();
   }
 
-  login(user: User) {
-    if (user.userName !== '' && user.password !== '') {
-      this.loggedIn.next(true);
-      this.router.navigateByUrl('/');
-    }
+  login(user: UserApp) {
+    this.user.next(UserApp.FROM_JSON(user));
+  }
+
+  getToken(user: User): Observable<JwtApp> {
+    return this.http.post<JwtApp>(environment.apiEndoint + environment.signinEndpoint, user);
+  }
+
+  public get userObject(): Observable<UserApp> {
+    return this.user.asObservable();
   }
 
   logout() {
     this.loggedIn.next(false);
+    this.user.next(new UserApp());
+    localStorage.removeItem('access_token');
     this.router.navigateByUrl('/login');
   }
 

@@ -3,5 +3,5 @@ export class LoginUser {
     lastName: string;
     username: string;
     email: string;
-    password?: string;
+    password: string;
 }

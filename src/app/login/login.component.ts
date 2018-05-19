@@ -6,6 +6,10 @@ import { ApiError } from '../models/api-error';
 import { plainToClass } from 'class-transformer';
 import { LoginSuccess } from '../models/login-success';
 import { MatSnackBar } from '@angular/material';
+import { JwtApp } from '../models/jwt';
+import { UserProfileService } from '../user-profile/user-profile.service';
+import { UserApp } from '../models/main-user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -22,12 +26,14 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userProfileService: UserProfileService,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.form = this.fb.group({
-      userName: ['', Validators.required],
+      usernameOrEmail: ['', Validators.required],
       password: ['', Validators.required]
     });
     this.registerForm = this.fb.group({
@@ -55,7 +61,22 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.authService.login(this.form.value);
+      // get token and create BehaviorSubject
+      this.authService.getToken(this.form.value).subscribe((jwt: JwtApp) => {
+        localStorage.setItem('access_token', jwt.accessToken);
+        // get user info, token will be add by @auth0/angular-jwt
+        this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
+          this.authService.login(user);
+          this.router.navigateByUrl('');
+        });
+      }, (err) => {
+        if (err instanceof HttpErrorResponse && err.status === 401) {
+          this.openSnackBar('Incorrect username or password');
+          this.form.reset();
+        } else {
+          console.log(err);
+        }
+      });
     }
     this.formSubmitAttempt = true;
   }
