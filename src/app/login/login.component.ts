@@ -114,12 +114,18 @@ export class LoginComponent implements OnInit {
           this.registerForm.get('password').reset();
           if (e.message.includes('mail')) {
             this.registerForm.get('email').reset();
+            this.openSnackBar(e.message);
           }
           if (e.message.includes('Username')) {
             this.registerForm.get('username').reset();
+            this.openSnackBar(e.message);
           }
-          this.openSnackBar(e.message);
+          if (e.message === 'User Role not set.') {
+            this.openSnackBar('Unexpected error, please try again later');
+            console.log(e);
+          }
         } else {
+          this.openSnackBar('Unexpected error, please try again later');
           console.log(e);
         }
       });
