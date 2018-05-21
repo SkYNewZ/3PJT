@@ -10,6 +10,7 @@ export const environment = {
   checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability',
   userInfoEndpoint: '/user/me',
   uploadFileEndpoint: '/files/upload',
+  listFilesEndpoint: '/files'
 };
 
 /*

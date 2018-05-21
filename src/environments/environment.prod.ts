@@ -5,5 +5,6 @@ export const environment = {
   signinEndpoint: '/auth/signin',
   checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability',
   userInfoEndpoint: '/user/me',
-  uploadFileEndpoint: '/files/upload'
+  uploadFileEndpoint: '/files/upload',
+  listFilesEndpoint: '/files'
 };
