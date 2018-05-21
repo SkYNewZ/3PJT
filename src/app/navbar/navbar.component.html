@@ -4,13 +4,19 @@
     <button mat-button routerLink="/">
       <mat-icon>home</mat-icon>
       File Manager</button>
+    <button mat-button routerLink="/file/upload">Upload files</button>
 
     <!-- This fills the remaining space of the current row -->
     <span class="fill-remaining-space"></span>
     <div fxLayout="row" fxShow="false" fxShow.gt-sm>
-      <button mat-icon-button [matMenuTriggerFor]="appMenu" id="avatar-button">
-        <img [src]="gravatarUrl" class="user-avatar">
-      </button>
+      <mat-toolbar-row>
+        {{ getFormatedFirstnameAndLastname() }}
+      </mat-toolbar-row>
+      <mat-toolbar-row>
+        <button mat-icon-button [matMenuTriggerFor]="appMenu" id="avatar-button">
+          <img [src]="getGravatarUrl()" class="user-avatar">
+        </button>
+      </mat-toolbar-row>
       <mat-menu #appMenu="matMenu" [overlapTrigger]="false">
         <button mat-menu-item routerLink="/profile">Profile</button>
         <button mat-button (click)="onLogout()">Logout</button>
