@@ -16,6 +16,7 @@ export class UserProfileComponent implements OnInit {
 
   public user: UserApp = null;
   public form: FormGroup;
+  public showLoader: Boolean = true;
 
   constructor(
     private userService: UserProfileService,
@@ -38,6 +39,7 @@ export class UserProfileComponent implements OnInit {
         credentialsNonExpired: [true, Validators.required],
         enabled: [true, Validators.required]
       });
+      this.showLoader = false;
     });
   }
 

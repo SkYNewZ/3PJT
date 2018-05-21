@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   public registerForm: FormGroup;
   public selectedTab = 0;
   public returnUrl: string;
+  public showLoader: Boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -68,6 +69,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
+      this.showLoader = true;
       // get token and create BehaviorSubject
       this.authService.getToken(this.form.value).subscribe((jwt: JwtApp) => {
         localStorage.setItem('access_token', jwt.accessToken);
@@ -77,11 +79,13 @@ export class LoginComponent implements OnInit {
           this.router.navigateByUrl(this.returnUrl);
         });
       }, (err) => {
+        console.log(err);
+        this.showLoader = false;
         if (err instanceof HttpErrorResponse && err.status === 401) {
           this.openSnackBar('Incorrect username or password');
           this.form.reset();
-        } else {
-          console.log(err);
+        } else if (err instanceof HttpErrorResponse && err.status === 0) {
+          this.openSnackBar('Server unreachable, please try again later');
         }
       });
     }

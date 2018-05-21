@@ -1,11 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
-body, html {
-    margin: 0;
-    font-family: 'Roboto';
+body,
+html {
+  margin: 0;
+  font-family: "Roboto";
 }
 
 img {
-    border-radius: 50%;
-  }
+  border-radius: 50%;
+}
+
+mat-progress-spinner {
+  position: absolute !important;
+  top: calc(34% - 50px);
+  left: calc(50% - 50px);
+  z-index: 100;
+}

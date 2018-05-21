@@ -6,12 +6,6 @@
   overflow: auto;
 }
 
-mat-progress-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-}
-
 .mat-column-select {
     overflow: initial;
   }
