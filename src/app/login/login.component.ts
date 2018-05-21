@@ -38,19 +38,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['redirect_uri'] || '/';
     const t = this.jwtService.tokenGetter();
-    if (!this.jwtService.isTokenExpired(t)) {
-      this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
-        this.authService.login(user);
-        this.router.navigateByUrl(this.returnUrl);
-      }, (err) => {
-        if (err instanceof HttpErrorResponse && err.status === 401) {
-          this.openSnackBar('Session Expired');
-          this.form.reset();
-        } else {
-          console.log(err);
-        }
-      });
-    }
     this.form = this.fb.group({
       usernameOrEmail: ['', Validators.required],
       password: ['', Validators.required]

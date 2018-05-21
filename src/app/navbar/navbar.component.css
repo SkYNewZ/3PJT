@@ -12,3 +12,7 @@
 #avatar-button {
   height: 50px;
 }
+
+mat-toolbar {
+  margin-bottom: 20px;
+}

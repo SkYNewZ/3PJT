@@ -13,7 +13,6 @@ import { MaterialModule } from './material/material.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { FileComponent } from './file/file.component';
-import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 
@@ -40,7 +39,6 @@ export function tokenGetter() {
     LoginComponent,
     NavbarComponent,
     FileComponent,
-    HomeComponent,
     UserProfileComponent
   ],
   imports: [

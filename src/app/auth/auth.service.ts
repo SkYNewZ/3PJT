@@ -14,15 +14,14 @@ import { JwtApp } from '../models/jwt';
   providedIn: 'root'
 })
 export class AuthService {
-  private loggedIn = new BehaviorSubject<boolean>(false);
-  private user: BehaviorSubject<UserApp> = new BehaviorSubject<UserApp>(new UserApp());
+  public user: BehaviorSubject<UserApp> = new BehaviorSubject<UserApp>(new UserApp());
 
   constructor(
     private router: Router,
     private http: HttpClient
   ) { }
 
-  get isLoggedIn() {
+  public get isLoggedIn(): Observable<UserApp> {
     return this.user.asObservable();
   }
 
@@ -34,12 +33,7 @@ export class AuthService {
     return this.http.post<JwtApp>(environment.apiEndoint + environment.signinEndpoint, user);
   }
 
-  public get userObject(): Observable<UserApp> {
-    return this.user.asObservable();
-  }
-
   logout() {
-    this.loggedIn.next(false);
     this.user.next(new UserApp());
     localStorage.removeItem('access_token');
     this.router.navigateByUrl('/login');
