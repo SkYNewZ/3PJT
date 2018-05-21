@@ -39,7 +39,7 @@ export function tokenGetter() {
     LoginComponent,
     NavbarComponent,
     FileComponent,
-    UserProfileComponent
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,

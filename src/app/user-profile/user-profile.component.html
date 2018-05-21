@@ -1,3 +1,53 @@
-<p>
-  user-profile works!
-</p>
+<ng-container *ngIf="user">
+  <div class="container">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-card>
+        <mat-card-title>Edit your profile</mat-card-title>
+        <mat-card-subtitle>Quentin Lemaire
+          <img mat-card-image [src]="getGravatarUrl()">
+        </mat-card-subtitle>
+        <mat-card-content>
+          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+            <mat-form-field>
+              <input matInput placeholder="Firstname" formControlName="firstName" required>
+              <mat-error>
+                Please inform your first name
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Lastname" formControlName="lastName" required>
+              <mat-error>
+                Please inform your last name
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+            <mat-form-field>
+              <input matInput placeholder="Email" formControlName="email" required>
+              <mat-error>
+                Please inform a valid email adress
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Username" formControlName="username" required>
+              <mat-error>
+                Please inform your user name
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+            <mat-form-field>
+              <input matInput type="password" placeholder="Password" formControlName="password">
+              <mat-error>
+                Password must contain at leat 5 characters and 40 characters
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary" type="submit" class="button-margin">Save</button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</ng-container>

@@ -5,10 +5,12 @@ import { AppComponent } from './app.component';
 import { FileComponent } from './file/file.component';
 import { AuthGuard } from './auth/auth.guard';
 import { LoginComponent } from './login/login.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
   { path: '', component: FileComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: '**', component: FileComponent, canActivate: [AuthGuard] },
 ];
 
