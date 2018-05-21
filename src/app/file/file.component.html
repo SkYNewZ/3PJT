@@ -1,3 +1,53 @@
-<p>
-  file works!
-</p>
+<mat-card>
+  <mat-card-title>My files</mat-card-title>
+  <mat-card-subtitle>Manage your files</mat-card-subtitle>
+  <mat-card-content *ngIf="dataSource">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <div class="example-container mat-elevation-z8">
+      <table mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let file"> {{file.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
+          <td mat-cell *matCellDef="let file"> {{file.createdAt | date : 'short'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last modified </th>
+          <td mat-cell *matCellDef="let file"> {{file.updatedAt | date : 'short'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions</th>
+          <td mat-cell *matCellDef="let file">
+            <button mat-icon-button title="Delete file" (click)="deleteFile(file)"><mat-icon>delete</mat-icon></button>
+            <button mat-icon-button title="Duplicate this file" (click)="copyFile(file)"><mat-icon>file_copy</mat-icon></button>
+            <button mat-icon-button title="Download this file" (click)="downloadFile(file)"><mat-icon>save</mat-icon></button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-footer-row *matFooterRowDef="columnsToDisplay"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-progress-spinner *ngIf="showLoader"></mat-progress-spinner>
