@@ -15,6 +15,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { FileComponent } from './file/file.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 export function provideConfig() {
   return new AuthServiceConfig([
@@ -40,6 +41,7 @@ export function tokenGetter() {
     NavbarComponent,
     FileComponent,
     UserProfileComponent,
+    FileUploadComponent,
   ],
   imports: [
     BrowserModule,
