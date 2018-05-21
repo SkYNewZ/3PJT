@@ -17,3 +17,7 @@ mat-icon {
 a {
   color: inherit;
 }
+
+#upload-dir {
+  margin-left: 10px;
+}

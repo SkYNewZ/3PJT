@@ -4,7 +4,10 @@
       <mat-card-title>My files</mat-card-title>
       <mat-card-subtitle>Manage your files</mat-card-subtitle>
     </div>
-    <app-upload></app-upload>
+    <div>
+        <app-upload></app-upload>
+        <button mat-raised-button id="upload-dir"><mat-icon>create_new_folder</mat-icon> Create folder</button>
+    </div>
   </div>
   <mat-card-content *ngIf="dataSource">
     <mat-form-field>
