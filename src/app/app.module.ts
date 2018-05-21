@@ -15,7 +15,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { FileComponent } from './file/file.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { FileUploadComponent } from './file-upload/file-upload.component';
+import { UploadModule } from './upload/upload.module';
 
 export function provideConfig() {
   return new AuthServiceConfig([
@@ -41,7 +41,6 @@ export function tokenGetter() {
     NavbarComponent,
     FileComponent,
     UserProfileComponent,
-    FileUploadComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,7 +57,8 @@ export function tokenGetter() {
         whitelistedDomains: ['localhost:8080', 'supdrive.lemairepro.fr'],
         blacklistedRoutes: ['localhost:8080/api/auth']
       }
-    })
+    }),
+    UploadModule
   ],
   providers: [
     {

@@ -8,7 +8,8 @@ export const environment = {
   signupEndpoint: '/auth/signup',
   signinEndpoint: '/auth/signin',
   checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability',
-  userInfoEndpoint: '/user/me'
+  userInfoEndpoint: '/user/me',
+  uploadFileEndpoint: '/files/upload',
 };
 
 /*
