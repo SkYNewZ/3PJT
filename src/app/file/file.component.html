@@ -25,7 +25,13 @@
 
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-          <td mat-cell *matCellDef="let file"> {{file.name}} </td>
+          <td mat-cell *matCellDef="let file">
+            <ng-container [ngSwitch]="file.mimeType">
+                <mat-icon *ngSwitchCase="'image/png'">insert_photo</mat-icon>
+                <mat-icon *ngSwitchCase="'folder'">folder</mat-icon>
+            </ng-container>
+            <a href="">{{file.name}}</a>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="createdAt">
@@ -43,9 +49,6 @@
           <td mat-cell *matCellDef="let file">
             <button mat-icon-button title="Delete file" (click)="deleteFile(file)">
               <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-icon-button title="Duplicate this file" (click)="copyFile(file)">
-              <mat-icon>file_copy</mat-icon>
             </button>
             <button mat-icon-button title="Download this file" (click)="downloadFile(file)">
               <mat-icon>save</mat-icon>

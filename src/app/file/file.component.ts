@@ -27,7 +27,6 @@ export class FileComponent implements OnInit {
 
   ngOnInit() {
     this.getFiles();
-    this.dataSource.sort = this.sort;
     this.selection = new SelectionModel<File>(this.allowMultiSelect, this.initialSelection);
   }
 
@@ -35,6 +34,7 @@ export class FileComponent implements OnInit {
     this.fileService.getFiles().subscribe((files: File[]) => {
       this.dataSource = new MatTableDataSource(files);
       this.showLoader = false;
+      this.dataSource.sort = this.sort;
     });
   }
 
@@ -61,10 +61,6 @@ export class FileComponent implements OnInit {
   }
 
   downloadFile(file: File) {
-    console.log(file);
-  }
-
-  copyFile(file: File) {
     console.log(file);
   }
 
