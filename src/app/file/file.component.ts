@@ -17,7 +17,6 @@ import { FolderCreationDialogComponent } from './folder-creation-dialog.componen
 })
 export class FileComponent implements OnInit {
   public showLoader: Boolean = true;
-  public elements: (File | Folder)[] = [];
   public dataSource: MatTableDataSource<File | Folder> = new MatTableDataSource(
     []
   );
@@ -45,7 +44,7 @@ export class FileComponent implements OnInit {
 
   ngOnInit() {
     this.getFiles(this.route.snapshot.paramMap.get('uuid'));
-    this.ss.getLastFileUploaded().subscribe((item:  File) => {
+    this.ss.getLastFileUploaded().subscribe((item: File) => {
       // push file if a new is upload
       this.dataSource.data.push(item);
       this.dataSource = new MatTableDataSource(this.dataSource.data);
@@ -152,11 +151,15 @@ export class FileComponent implements OnInit {
 
     // after closing the dialog, send the request for folder creation
     dialogRef.afterClosed().subscribe(name => {
-      this.fileService.createFolder(name).subscribe((folder: Folder) => {
-        this.dataSource.data.push(folder);
-        this.dataSource = new MatTableDataSource(this.dataSource.data);
-        this.orderDatasource();
-      });
+      if (name) {
+        this.fileService
+          .createFolder(name, this.route.snapshot.paramMap.get('uuid'))
+          .subscribe((folder: Folder) => {
+            this.dataSource.data.push(folder);
+            this.dataSource = new MatTableDataSource(this.dataSource.data);
+            this.orderDatasource();
+          });
+      }
     });
   }
 
@@ -174,8 +177,6 @@ export class FileComponent implements OnInit {
     // sort
     folders = this.sortAlphabetically(folders);
     files = this.sortAlphabetically(files);
-    this.dataSource = new MatTableDataSource(
-      t.concat(folders).concat(files)
-    );
+    this.dataSource = new MatTableDataSource(t.concat(folders).concat(files));
   }
 }

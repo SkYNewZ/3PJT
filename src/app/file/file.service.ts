@@ -34,7 +34,7 @@ export class FileService {
     if (!parentUuid) {
       return this.http.post<Folder>(url, body);
     } else {
-      return this.http.post<Folder>(url + `${parentUuid}`, body);
+      return this.http.post<Folder>(url + `/${parentUuid}`, body);
     }
   }
 }

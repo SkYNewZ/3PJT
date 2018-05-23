@@ -21,8 +21,8 @@ export class UploadService {
   ): { [key: string]: Observable<number> } {
     // this will be the our resulting map
     const status = {};
-    let url: String = environment.apiEndoint + environment.uploadFileEndpoint;
-    if (!currentDirectoryUuid) {
+    let url: string = environment.apiEndoint + environment.uploadFileEndpoint;
+    if (currentDirectoryUuid) {
       url += `/${currentDirectoryUuid}`;
     }
 
@@ -35,7 +35,7 @@ export class UploadService {
       // tell it to report the upload progress
       const req = new HttpRequest(
         'POST',
-        `${environment.apiEndoint + environment.uploadFileEndpoint}`,
+        url,
         formData,
         {
           reportProgress: true

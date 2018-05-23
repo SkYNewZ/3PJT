@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { UploadService } from '../upload.service';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-dialog',
@@ -20,7 +21,8 @@ export class DialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
-    public uploadService: UploadService
+    public uploadService: UploadService,
+    private route: ActivatedRoute
   ) {}
 
   addFiles() {
@@ -46,7 +48,7 @@ export class DialogComponent {
     this.uploading = true;
 
     // start the upload and save the progress map
-    this.progress = this.uploadService.upload(this.files);
+    this.progress = this.uploadService.upload(this.files, this.route.firstChild.snapshot.paramMap.get('uuid'));
 
     // convert the progress map into an array
     const allProgressObservables = [];
