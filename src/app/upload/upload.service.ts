@@ -13,9 +13,16 @@ import { environment } from '../../environments/environment';
 export class UploadService {
   constructor(private http: HttpClient) {}
 
-  public upload(files: Set<File>): { [key: string]: Observable<number> } {
+  public upload(
+    files: Set<File>,
+    currentDirectoryUuid?: string
+  ): { [key: string]: Observable<number> } {
     // this will be the our resulting map
     const status = {};
+    let url: String = environment.apiEndoint + environment.uploadFileEndpoint;
+    if (!currentDirectoryUuid) {
+      url += `/${currentDirectoryUuid}`;
+    }
 
     files.forEach(file => {
       // create a new multipart-form for every file
@@ -24,9 +31,14 @@ export class UploadService {
 
       // create a http-post request and pass the form
       // tell it to report the upload progress
-      const req = new HttpRequest('POST', environment.apiEndoint + environment.uploadFileEndpoint, formData, {
-        reportProgress: true
-      });
+      const req = new HttpRequest(
+        'POST',
+        `${environment.apiEndoint + environment.uploadFileEndpoint}`,
+        formData,
+        {
+          reportProgress: true
+        }
+      );
 
       // create a new progress-subject for every file
       const progress = new Subject<number>();

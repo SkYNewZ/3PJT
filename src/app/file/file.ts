@@ -5,8 +5,8 @@ export class File {
   private _uuid: string;
   private _extention: string;
   private _mimeType: string;
-  private _createdAt: number;
-  private _updatedAt: number;
+  private _createdAt: string;
+  private _updatedAt: string;
 
   public static FROM_JSON(jsonObject: {}): File {
     return plainToClass(File, jsonObject);

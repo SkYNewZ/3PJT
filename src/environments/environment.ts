@@ -5,12 +5,24 @@
 export const environment = {
   production: false,
   apiEndoint: 'http://localhost:8080/api',
+
+  // register a new user
   signupEndpoint: '/auth/signup',
+
+  // log in with credentials, obtain a jwt
   signinEndpoint: '/auth/signin',
+
+  // check if username is already taken in database
   checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability',
+
+  // get user information (username, firstname, etc)
   userInfoEndpoint: '/user/me',
+
+  // upload a file (/<UUID> can be added to upload file in given directory)
   uploadFileEndpoint: '/files/upload',
-  listFilesEndpoint: '/files'
+
+  // list all files in home directory (/<UUID> can be added to upload file in given directory)
+  listFilesEndpoint: '/folder'
 };
 
 /*

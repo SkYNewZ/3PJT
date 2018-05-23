@@ -14,15 +14,19 @@ export class FileService {
     private http: HttpClient
   ) { }
 
-  getOneFile(id: string): Observable<File> {
-    return this.http.get<File>(environment.apiEndoint + `/files/${id}`);
+  // get one file (in order to diplay it)
+  // TODO: is it usefull ?
+  getOneFile(uuid: string): Observable<File> {
+    return this.http.get<File>(environment.apiEndoint + `/files/${uuid}`);
   }
 
-  getFiles(folder?: string): Observable<File[]> {
-    if (!folder) {
-      return this.http.get<File[]>(environment.apiEndoint + environment.listFilesEndpoint);
+  // get a list of file from the given (optionnal) directory
+  getFiles(uuid?: string): Observable<File[]> {
+    const url: string = environment.apiEndoint + environment.listFilesEndpoint;
+    if (!uuid) {
+      return this.http.get<File[]>(url);
     } else {
-      return this.http.get<File[]>(`${environment.apiEndoint + environment.listFilesEndpoint}?folder=${folder}`);
+      return this.http.get<File[]>(url + `/${uuid}`);
     }
   }
 }
