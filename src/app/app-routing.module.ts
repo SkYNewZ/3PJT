@@ -8,18 +8,29 @@ import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
-  { path: '', component: FileComponent, canActivate: [AuthGuard] },
+  { path: 'my-files', component: FileComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: '**', component: FileComponent, canActivate: [AuthGuard] },
+  {
+    path: 'profile',
+    component: UserProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: '',
+    redirectTo: '/my-files',
+    pathMatch: 'full'
+  },
+  { path: 'folder/:uuid', component: FileComponent, canActivate: [AuthGuard] },
+  {
+    path: '**',
+    redirectTo: '/my-files',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
   exports: [RouterModule],
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(routes)
-  ],
+  imports: [CommonModule, RouterModule.forRoot(routes)],
   declarations: []
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

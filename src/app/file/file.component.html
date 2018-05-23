@@ -16,6 +16,9 @@
       <input matInput (keyup)="applyFilter($event.target.value)">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
+    <button mat-icon-button title="Go back" (click)="backClicked()">
+        <mat-icon>arrow_upward</mat-icon>
+      </button>
     <div class="mat-elevation-z8" fxLayout="column">
       <table mat-table [dataSource]="dataSource">
 

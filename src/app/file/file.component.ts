@@ -5,6 +5,8 @@ import { MatTableDataSource, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiListElement } from './list-element';
 import { Folder } from './folder';
+import { ActivatedRoute, Route, Router, NavigationEnd } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-file',
@@ -23,46 +25,53 @@ export class FileComponent implements OnInit {
   ];
   public initialSelection = [];
   public allowMultiSelect = true;
-  public selection: SelectionModel<File> = new SelectionModel<File>(false, null);
+  public selection: SelectionModel<File> = new SelectionModel<File>(
+    false,
+    null
+  );
 
-  @ViewChild(MatSort) sort: MatSort;
-
-  constructor(private fileService: FileService) {}
+  constructor(
+    private fileService: FileService,
+    private route: ActivatedRoute,
+    private location: Location,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.getFiles();
+    this.getFiles(this.route.snapshot.paramMap.get('uuid'));
   }
 
-  getFiles(): void {
-    this.fileService.getFiles().subscribe((elements: ApiListElement) => {
-      const e: ApiListElement = ApiListElement.FROM_JSON(elements);
-      const t: (File | Folder)[] = [];
+  getFiles(parentFolderUuid?: string): void {
+    this.fileService
+      .getFiles(parentFolderUuid)
+      .subscribe((elements: ApiListElement) => {
+        const e: ApiListElement = ApiListElement.FROM_JSON(elements);
+        const t: (File | Folder)[] = [];
 
-      // create the folder array
-      let folderTab: Folder[] = [];
-      e.folders.forEach((folder, idx) => {
-        const fo: Folder = Folder.FROM_JSON(folder);
-        folderTab.push(fo);
+        // create the folder array
+        let folderTab: Folder[] = [];
+        e.folders.forEach((folder, idx) => {
+          const fo: Folder = Folder.FROM_JSON(folder);
+          folderTab.push(fo);
+        });
+        // sort
+        folderTab = this.sortAlphabetically(folderTab);
+
+        // create the file array
+        let filetab: File[] = [];
+        e.files.forEach((file, idx) => {
+          const f: File = File.FROM_JSON(file);
+          filetab.push(f);
+        });
+        // sort
+        filetab = this.sortAlphabetically(filetab);
+
+        // concat the two arrays
+        this.dataSource = new MatTableDataSource(
+          t.concat(folderTab).concat(filetab)
+        );
+        this.showLoader = false;
       });
-      // sort
-      folderTab = this.sortAlphabetically(folderTab);
-
-      // create the file array
-      let filetab: File[] = [];
-      e.files.forEach((file, idx) => {
-        const f: File = File.FROM_JSON(file);
-        filetab.push(f);
-      });
-      // sort
-      filetab = this.sortAlphabetically(filetab);
-
-      // concat the two arrays
-      this.dataSource = new MatTableDataSource(
-        t.concat(folderTab).concat(filetab)
-      );
-      this.showLoader = false;
-      this.dataSource.sort = this.sort;
-    });
   }
 
   applyFilter(filterValue: string) {
@@ -90,6 +99,8 @@ export class FileComponent implements OnInit {
       return 'drive_zip';
     } else if (mimetype.includes('directory')) {
       return 'folder';
+    } else if (mimetype.includes('text')) {
+      return 'drive_doc';
     }
   }
 
@@ -104,5 +115,9 @@ export class FileComponent implements OnInit {
       return 0;
     });
     return tab;
+  }
+
+  backClicked() {
+    this.location.back();
   }
 }

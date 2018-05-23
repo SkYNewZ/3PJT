@@ -11,6 +11,7 @@ import { UserProfileService } from '../user-profile/user-profile.service';
 import { UserApp } from '../models/main-user';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -33,7 +34,8 @@ export class LoginComponent implements OnInit {
     private userProfileService: UserProfileService,
     private router: Router,
     private jwtService: JwtHelperService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -76,6 +78,7 @@ export class LoginComponent implements OnInit {
         // get user info, token will be add by @auth0/angular-jwt
         this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
           this.authService.login(user);
+          this.location.replaceState('/');
           this.router.navigateByUrl(this.returnUrl);
         });
       }, (err) => {
