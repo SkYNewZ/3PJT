@@ -7,7 +7,24 @@ export class Folder {
   private _files: File[];
   private _createdAt: string;
   private _updatedAt: string;
+  private _mimeType: string;
   private _defaultDirectory: boolean;
+
+  /**
+   * Getter mimeType
+   * @return {string}
+   */
+  public get mimeType(): string {
+    return this._mimeType;
+  }
+
+  /**
+   * Setter mimeType
+   * @param {string} value
+   */
+  public set mimeType(value: string) {
+    this._mimeType = value;
+  }
 
   public static FROM_JSON(jsonObject: {}): Folder {
     return plainToClass(Folder, jsonObject);

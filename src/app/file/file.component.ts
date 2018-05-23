@@ -16,7 +16,9 @@ import { Location } from '@angular/common';
 export class FileComponent implements OnInit {
   public showLoader: Boolean = true;
   public elements: (File | Folder)[] = [];
-  public dataSource: MatTableDataSource<File | Folder>;
+  public dataSource: MatTableDataSource<File | Folder> = new MatTableDataSource(
+    []
+  );
   public displayedColumns: String[] = [
     'name',
     'createdAt',
@@ -45,31 +47,32 @@ export class FileComponent implements OnInit {
     this.fileService
       .getFiles(parentFolderUuid)
       .subscribe((elements: ApiListElement) => {
-        const e: ApiListElement = ApiListElement.FROM_JSON(elements);
-        const t: (File | Folder)[] = [];
+        if (!(elements.files.length === 0 && elements.folders.length === 0)) {
+          const e: ApiListElement = ApiListElement.FROM_JSON(elements);
+          const t: (File | Folder)[] = [];
+          // create the folder array
+          let folderTab: Folder[] = [];
+          e.folders.forEach((folder, idx) => {
+            const fo: Folder = Folder.FROM_JSON(folder);
+            folderTab.push(fo);
+          });
+          // sort
+          folderTab = this.sortAlphabetically(folderTab);
 
-        // create the folder array
-        let folderTab: Folder[] = [];
-        e.folders.forEach((folder, idx) => {
-          const fo: Folder = Folder.FROM_JSON(folder);
-          folderTab.push(fo);
-        });
-        // sort
-        folderTab = this.sortAlphabetically(folderTab);
+          // create the file array
+          let filetab: File[] = [];
+          e.files.forEach((file, idx) => {
+            const f: File = File.FROM_JSON(file);
+            filetab.push(f);
+          });
+          // sort
+          filetab = this.sortAlphabetically(filetab);
 
-        // create the file array
-        let filetab: File[] = [];
-        e.files.forEach((file, idx) => {
-          const f: File = File.FROM_JSON(file);
-          filetab.push(f);
-        });
-        // sort
-        filetab = this.sortAlphabetically(filetab);
-
-        // concat the two arrays
-        this.dataSource = new MatTableDataSource(
-          t.concat(folderTab).concat(filetab)
-        );
+          // concat the two arrays
+          this.dataSource = new MatTableDataSource(
+            t.concat(folderTab).concat(filetab)
+          );
+        }
         this.showLoader = false;
       });
   }
@@ -81,10 +84,12 @@ export class FileComponent implements OnInit {
   }
 
   deleteFile(file: File) {
+    console.log('delete this file');
     console.log(file);
   }
 
   downloadFile(file: File) {
+    console.log('download this file');
     console.log(file);
   }
 
@@ -117,7 +122,16 @@ export class FileComponent implements OnInit {
     return tab;
   }
 
-  backClicked() {
+  backClicked(): void {
     this.location.back();
+  }
+
+  navigate(row: File | Folder): void {
+    if (row.mimeType === 'inode/directory') {
+      this.router.navigate(['/folder', row.uuid]);
+    } else {
+      console.log('file redirection not set');
+      this.router.navigate(['/file', row.uuid]);
+    }
   }
 }
