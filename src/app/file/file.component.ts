@@ -7,6 +7,7 @@ import { ApiListElement } from './list-element';
 import { Folder } from './folder';
 import { ActivatedRoute, Route, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-file',
@@ -36,11 +37,17 @@ export class FileComponent implements OnInit {
     private fileService: FileService,
     private route: ActivatedRoute,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private ss: SharedService,
   ) {}
 
   ngOnInit() {
     this.getFiles(this.route.snapshot.paramMap.get('uuid'));
+    this.ss.getLastFileUploaded().subscribe((item:  File) => {
+      // push file if a new is upload
+      this.dataSource.data.push(item);
+      this.dataSource = new MatTableDataSource(this.dataSource.data);
+    });
   }
 
   getFiles(parentFolderUuid?: string): void {

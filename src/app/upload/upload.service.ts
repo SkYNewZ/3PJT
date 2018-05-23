@@ -8,10 +8,12 @@ import {
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { SharedService } from '../shared.service';
+import { File as ApiFile } from '../file/file';
 
 @Injectable()
 export class UploadService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private ss: SharedService) {}
 
   public upload(
     files: Set<File>,
@@ -52,6 +54,9 @@ export class UploadService {
           // pass the percentage into the progress-stream
           progress.next(percentDone);
         } else if (event instanceof HttpResponse) {
+          // communicate the result file for displaying in the list
+          const f: ApiFile = ApiFile.FROM_JSON(event.body);
+          this.ss.newUploadedFile(f);
           // Close the progress-stream if we get an answer form the API
           // The upload is complete
           progress.complete();
