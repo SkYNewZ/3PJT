@@ -23,7 +23,7 @@ export class FileComponent implements OnInit {
   ];
   public initialSelection = [];
   public allowMultiSelect = true;
-  public selection: SelectionModel<File>;
+  public selection: SelectionModel<File> = new SelectionModel<File>(false, null);
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -31,10 +31,6 @@ export class FileComponent implements OnInit {
 
   ngOnInit() {
     this.getFiles();
-    this.selection = new SelectionModel<File>(
-      this.allowMultiSelect,
-      this.initialSelection
-    );
   }
 
   getFiles(): void {
@@ -61,7 +57,9 @@ export class FileComponent implements OnInit {
       filetab = this.sortAlphabetically(filetab);
 
       // concat the two arrays
-      this.dataSource = new MatTableDataSource(t.concat(folderTab).concat(filetab));
+      this.dataSource = new MatTableDataSource(
+        t.concat(folderTab).concat(filetab)
+      );
       this.showLoader = false;
       this.dataSource.sort = this.sort;
     });
@@ -97,8 +95,12 @@ export class FileComponent implements OnInit {
 
   sortAlphabetically(tab: any[]): any[] {
     tab.sort(function(a, b) {
-      if (a.name < b.name) { return -1; }
-      if (a.name > b.name) { return 1; }
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
       return 0;
     });
     return tab;
