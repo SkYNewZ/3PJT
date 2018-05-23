@@ -50,17 +50,17 @@ export class File {
 
   /**
    * Getter createdAt
-   * @return {number}
+   * @return {string}
    */
-  public get createdAt(): number {
+  public get createdAt(): string {
     return this._createdAt;
   }
 
   /**
    * Getter updatedAt
-   * @return {number}
+   * @return {string}
    */
-  public get updatedAt(): number {
+  public get updatedAt(): string {
     return this._updatedAt;
   }
 
@@ -98,17 +98,17 @@ export class File {
 
   /**
    * Setter createdAt
-   * @param {number} value
+   * @param {string} value
    */
-  public set createdAt(value: number) {
+  public set createdAt(value: string) {
     this._createdAt = value;
   }
 
   /**
    * Setter updatedAt
-   * @param {number} value
+   * @param {string} value
    */
-  public set updatedAt(value: number) {
+  public set updatedAt(value: string) {
     this._updatedAt = value;
   }
 }
