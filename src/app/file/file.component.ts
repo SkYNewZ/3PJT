@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileService } from './file.service';
 import { File } from './file';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiListElement } from './list-element';
 import { Folder } from './folder';
 import { ActivatedRoute, Route, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { SharedService } from '../shared.service';
+import { FolderCreationDialogComponent } from './folder-creation-dialog.component';
 
 @Component({
   selector: 'app-file',
@@ -39,6 +40,7 @@ export class FileComponent implements OnInit {
     private location: Location,
     private router: Router,
     private ss: SharedService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -47,6 +49,7 @@ export class FileComponent implements OnInit {
       // push file if a new is upload
       this.dataSource.data.push(item);
       this.dataSource = new MatTableDataSource(this.dataSource.data);
+      this.orderDatasource();
     });
   }
 
@@ -118,10 +121,10 @@ export class FileComponent implements OnInit {
 
   sortAlphabetically(tab: any[]): any[] {
     tab.sort(function(a, b) {
-      if (a.name < b.name) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) {
         return -1;
       }
-      if (a.name > b.name) {
+      if (a.name.toLowerCase() > b.name.toLowerCase()) {
         return 1;
       }
       return 0;
@@ -140,5 +143,39 @@ export class FileComponent implements OnInit {
       console.log('file redirection not set');
       this.router.navigate(['/file', row.uuid]);
     }
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(FolderCreationDialogComponent, {
+      width: '250px'
+    });
+
+    // after closing the dialog, send the request for folder creation
+    dialogRef.afterClosed().subscribe(name => {
+      this.fileService.createFolder(name).subscribe((folder: Folder) => {
+        this.dataSource.data.push(folder);
+        this.dataSource = new MatTableDataSource(this.dataSource.data);
+        this.orderDatasource();
+      });
+    });
+  }
+
+  orderDatasource(): void {
+    let files: any[] = [];
+    let folders: any[] = [];
+    const t: (File | Folder)[] = [];
+    this.dataSource.data.forEach((item: File | Folder) => {
+      if (item.mimeType === 'inode/directory') {
+        folders.push(item);
+      } else {
+        files.push(item);
+      }
+    });
+    // sort
+    folders = this.sortAlphabetically(folders);
+    files = this.sortAlphabetically(files);
+    this.dataSource = new MatTableDataSource(
+      t.concat(folders).concat(files)
+    );
   }
 }

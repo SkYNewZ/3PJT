@@ -16,6 +16,7 @@ import { FileComponent } from './file/file.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UploadModule } from './upload/upload.module';
+import { FolderCreationDialogComponent } from './file/folder-creation-dialog.component';
 
 export function provideConfig() {
   return new AuthServiceConfig([
@@ -41,6 +42,7 @@ export function tokenGetter() {
     NavbarComponent,
     FileComponent,
     UserProfileComponent,
+    FolderCreationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +68,7 @@ export function tokenGetter() {
       useFactory: provideConfig
     }
   ],
+  entryComponents: [FolderCreationDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

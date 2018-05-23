@@ -6,5 +6,6 @@ export const environment = {
   checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability',
   userInfoEndpoint: '/user/me',
   uploadFileEndpoint: '/files/upload',
-  listFilesEndpoint: '/folder'
+  listFilesEndpoint: '/folder',
+  createFolderEndpoint: '/folder'
 };

@@ -22,7 +22,10 @@ export const environment = {
   uploadFileEndpoint: '/files/upload',
 
   // list all files in home directory (/<UUID> can be added to upload file in given directory)
-  listFilesEndpoint: '/folder'
+  listFilesEndpoint: '/folder',
+
+  // create a folder (/<UUID> can be added to create directory in the given one)
+  createFolderEndpoint: '/folder'
 };
 
 /*
