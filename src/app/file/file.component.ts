@@ -165,7 +165,7 @@ export class FileComponent implements OnInit {
     const dialogRef = this.dialog.open(InputDialogComponent, {
       width: '250px',
       data: {
-        title: 'What will be the name if the folder',
+        title: 'What will be the name of the folder',
         buttonOkay: 'Create'
       }
     });

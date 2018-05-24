@@ -4,6 +4,12 @@ image: docker:latest
 variables:
     DOCKER_DRIVER: overlay2
 
+cache:
+  untracked: true
+  key: "$CI_BUILD_REF_NAME"
+  paths:
+    - node_modules/
+
 services:
   - docker:dind
 
@@ -36,7 +42,7 @@ Deploy to Gitlab Registry:
     - docker tag app registry.gitlab.com/skynewz/supdrive-front:$(git describe --tags --abbrev=0)
     - docker push registry.gitlab.com/skynewz/supdrive-front:$(git describe --tags --abbrev=0)
   only:
-  - master
+  - tags
 
 Deploy to Rancher:
   stage: rancher_deploy
