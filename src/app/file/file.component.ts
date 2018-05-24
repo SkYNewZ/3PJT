@@ -106,8 +106,9 @@ export class FileComponent implements OnInit {
     const dialogRef = this.dialog.open(InputDialogComponent, {
       width: '250px',
       data: {
-        title: `Rename '${entity.mimeType === 'inode/directory' ? 'folder' : 'file'}' ${entity.name}`,
-        buttonOkay: 'Rename'
+        title: `Rename ${entity.mimeType === 'inode/directory' ? 'folder' : 'file'}`,
+        buttonOkay: 'Rename',
+        input: entity.name
       }
     });
 

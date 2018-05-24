@@ -9,7 +9,7 @@ export class InputDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<InputDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {title: string, buttonOkay: string}
+    @Inject(MAT_DIALOG_DATA) public data: {title: string, buttonOkay: string, input?: string}
   ) {}
 
   onNoClick(): void {
