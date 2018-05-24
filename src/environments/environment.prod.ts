@@ -8,6 +8,8 @@ export const environment = {
   uploadFileEndpoint: '/files/upload',
   listFilesEndpoint: '/folder',
   createFolderEndpoint: '/folder',
+  renameFolderEndpoint: '/folder',
+  deleteFolderEndpoint: '/folder',
   renameFileEndpoint: '/files',
-  renameFolderEndpoint: '/folder'
+  deleteFileEndpoint: '/files',
 };

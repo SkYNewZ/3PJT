@@ -8,7 +8,8 @@ import { Folder } from './folder';
 import { ActivatedRoute, Route, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { SharedService } from '../shared.service';
-import { InputDialogComponent } from './input-dialog.component';
+import { InputDialogComponent } from './input-dialog/input-dialog.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-file',
@@ -44,7 +45,6 @@ export class FileComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      console.log(params['uuid']);
       this.getFiles(params['uuid']);
     });
     this.ss.getLastFileUploaded().subscribe((item: File) => {
@@ -97,9 +97,23 @@ export class FileComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
-  deleteFile(file: File) {
-    console.log('delete this file');
-    console.log(file);
+  deleteEntity(entity: File | Folder) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: {
+        toDeleteName: entity.name,
+        mimeType: entity.mimeType,
+        svgIcon: this.getRightIcon(entity.mimeType)
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(answer => {
+      if (answer === true) {
+        this.fileService.deleteFileOrFolder(entity).subscribe(() => {
+          this.dataSource.data = this.dataSource.data.filter(item => item !== entity);
+        });
+      }
+    });
   }
 
   downloadFile(file: File) {

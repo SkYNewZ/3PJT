@@ -11,7 +11,7 @@ import { Folder } from './folder';
   providedIn: 'root'
 })
 export class FileService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // get a list of file from the given (optionnal) directory
   getFiles(uuid?: string): Observable<ApiListElement> {
@@ -38,14 +38,22 @@ export class FileService {
     }
   }
 
-  renameFile(entity: File | Folder, newName: string): Observable<File> {
+  renameFile(entity: File | Folder, newName: string): Observable<File | Folder> {
     const body: { name: string } = {
       name: newName
     };
     if (entity.mimeType === 'inode/directory') {
-      return this.http.put<File>(`${environment.apiEndoint + environment.renameFolderEndpoint}/${entity.uuid}`, body);
+      return this.http.put<Folder>(`${environment.apiEndoint + environment.renameFolderEndpoint}/${entity.uuid}`, body);
     } else {
       return this.http.put<File>(`${environment.apiEndoint + environment.renameFileEndpoint}/${entity.uuid}`, body);
+    }
+  }
+
+  deleteFileOrFolder(entity: File | Folder): Observable<File | Folder> {
+    if (entity.mimeType === 'inode/directory') {
+      return this.http.delete<Folder>(`${environment.apiEndoint + environment.deleteFolderEndpoint}/${entity.uuid}`);
+    } else {
+      return this.http.delete<File>(`${environment.apiEndoint + environment.deleteFileEndpoint}/${entity.uuid}`);
     }
   }
 }

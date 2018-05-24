@@ -16,7 +16,8 @@ import { FileComponent } from './file/file.component';
 import { HttpClientModule } from '@angular/common/http';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UploadModule } from './upload/upload.module';
-import { InputDialogComponent } from './file/input-dialog.component';
+import { InputDialogComponent } from './file/input-dialog/input-dialog.component';
+import { ConfirmationDialogComponent } from './file/confirmation-dialog/confirmation-dialog.component';
 
 export function provideConfig() {
   return new AuthServiceConfig([
@@ -42,7 +43,8 @@ export function tokenGetter() {
     NavbarComponent,
     FileComponent,
     UserProfileComponent,
-    InputDialogComponent
+    InputDialogComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,7 @@ export function tokenGetter() {
       useFactory: provideConfig
     }
   ],
-  entryComponents: [InputDialogComponent],
+  entryComponents: [InputDialogComponent, ConfirmationDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

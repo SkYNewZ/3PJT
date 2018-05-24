@@ -31,7 +31,13 @@ export const environment = {
   renameFileEndpoint: '/files',
 
   // rename a folder (/<UUID> mandatory)
-  renameFolderEndpoint: '/folder'
+  renameFolderEndpoint: '/folder',
+
+  // rename a folder (/<UUID> mandatory)
+  deleteFolderEndpoint: '/folder',
+
+  // rename a folder (/<UUID> mandatory)
+  deleteFileEndpoint: '/files'
 };
 
 /*
