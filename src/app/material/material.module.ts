@@ -148,5 +148,11 @@ export class MaterialModule {
         '../assets/svg_icons/zip_color.svg'
       )
     );
+    this.matIconRegistry.addSvgIcon(
+      'file_copy',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        '../assets/svg_icons/file_copy.svg'
+      )
+    );
   }
 }

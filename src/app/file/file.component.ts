@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FileService } from './file.service';
 import { File } from './file';
 import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
@@ -15,7 +15,7 @@ import { InputDialogComponent } from './input-dialog.component';
   templateUrl: './file.component.html',
   styleUrls: ['./file.component.css']
 })
-export class FileComponent implements OnInit, AfterViewInit {
+export class FileComponent implements OnInit {
   public showLoader: Boolean = true;
   public dataSource: MatTableDataSource<File | Folder> = new MatTableDataSource(
     []
@@ -32,7 +32,6 @@ export class FileComponent implements OnInit, AfterViewInit {
     false,
     null
   );
-  @ViewChild('filesTable') filesSort: MatSort;
 
   constructor(
     private fileService: FileService,
@@ -54,10 +53,6 @@ export class FileComponent implements OnInit, AfterViewInit {
       this.dataSource = new MatTableDataSource(this.dataSource.data);
       this.orderDatasource();
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.filesSort;
   }
 
   getFiles(parentFolderUuid?: string): void {
@@ -142,6 +137,8 @@ export class FileComponent implements OnInit, AfterViewInit {
       return 'folder';
     } else if (mimetype.includes('text')) {
       return 'drive_doc';
+    } else {
+      return 'file_copy';
     }
   }
 
