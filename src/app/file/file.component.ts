@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FileService } from './file.service';
 import { File } from './file';
 import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
@@ -15,7 +15,7 @@ import { InputDialogComponent } from './input-dialog.component';
   templateUrl: './file.component.html',
   styleUrls: ['./file.component.css']
 })
-export class FileComponent implements OnInit {
+export class FileComponent implements OnInit, AfterViewInit {
   public showLoader: Boolean = true;
   public dataSource: MatTableDataSource<File | Folder> = new MatTableDataSource(
     []
@@ -32,6 +32,7 @@ export class FileComponent implements OnInit {
     false,
     null
   );
+  @ViewChild('filesTable') filesSort: MatSort;
 
   constructor(
     private fileService: FileService,
@@ -40,16 +41,23 @@ export class FileComponent implements OnInit {
     private router: Router,
     private ss: SharedService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
-    this.getFiles(this.route.snapshot.paramMap.get('uuid'));
+    this.route.params.subscribe(params => {
+      console.log(params['uuid']);
+      this.getFiles(params['uuid']);
+    });
     this.ss.getLastFileUploaded().subscribe((item: File) => {
       // push file if a new is upload
       this.dataSource.data.push(item);
       this.dataSource = new MatTableDataSource(this.dataSource.data);
       this.orderDatasource();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.filesSort;
   }
 
   getFiles(parentFolderUuid?: string): void {
@@ -81,6 +89,8 @@ export class FileComponent implements OnInit {
           this.dataSource = new MatTableDataSource(
             t.concat(folderTab).concat(filetab)
           );
+        } else {
+          this.dataSource = new MatTableDataSource([]);
         }
         this.showLoader = false;
       });
@@ -136,7 +146,7 @@ export class FileComponent implements OnInit {
   }
 
   sortAlphabetically(tab: any[]): any[] {
-    tab.sort(function(a, b) {
+    tab.sort(function (a, b) {
       if (a.name.toLowerCase() < b.name.toLowerCase()) {
         return -1;
       }
