@@ -1,10 +1,10 @@
 <div mat-dialog-content>
-    <p>What will be the name ofth folder ?</p>
+    <p>{{data.title}}</p>
     <mat-form-field>
         <input matInput [(ngModel)]="name">
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Cancel</button>
-    <button mat-button [mat-dialog-close]="name" cdkFocusInitial>Create</button>
+    <button mat-button [mat-dialog-close]="name" cdkFocusInitial>{{data.buttonOkay}}</button>
 </div>

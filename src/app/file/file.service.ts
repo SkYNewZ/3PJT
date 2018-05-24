@@ -37,4 +37,15 @@ export class FileService {
       return this.http.post<Folder>(url + `/${parentUuid}`, body);
     }
   }
+
+  renameFile(entity: File | Folder, newName: string): Observable<File> {
+    const body: { name: string } = {
+      name: newName
+    };
+    if (entity.mimeType === 'inode/directory') {
+      return this.http.put<File>(`${environment.apiEndoint + environment.renameFolderEndpoint}/${entity.uuid}`, body);
+    } else {
+      return this.http.put<File>(`${environment.apiEndoint + environment.renameFileEndpoint}/${entity.uuid}`, body);
+    }
+  }
 }

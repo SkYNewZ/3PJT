@@ -7,5 +7,7 @@ export const environment = {
   userInfoEndpoint: '/user/me',
   uploadFileEndpoint: '/files/upload',
   listFilesEndpoint: '/folder',
-  createFolderEndpoint: '/folder'
+  createFolderEndpoint: '/folder',
+  renameFileEndpoint: '/files',
+  renameFolderEndpoint: '/folder'
 };

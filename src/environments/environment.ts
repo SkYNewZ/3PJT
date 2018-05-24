@@ -25,7 +25,13 @@ export const environment = {
   listFilesEndpoint: '/folder',
 
   // create a folder (/<UUID> can be added to create directory in the given one)
-  createFolderEndpoint: '/folder'
+  createFolderEndpoint: '/folder',
+
+  // rename a file (/<UUID> mandatory)
+  renameFileEndpoint: '/files',
+
+  // rename a folder (/<UUID> mandatory)
+  renameFolderEndpoint: '/folder'
 };
 
 /*

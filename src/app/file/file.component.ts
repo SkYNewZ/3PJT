@@ -8,7 +8,7 @@ import { Folder } from './folder';
 import { ActivatedRoute, Route, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { SharedService } from '../shared.service';
-import { FolderCreationDialogComponent } from './folder-creation-dialog.component';
+import { InputDialogComponent } from './input-dialog.component';
 
 @Component({
   selector: 'app-file',
@@ -102,6 +102,22 @@ export class FileComponent implements OnInit {
     console.log(file);
   }
 
+  renameEntity(entity: File | Folder) {
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      width: '250px',
+      data: {
+        title: `Rename '${entity.mimeType === 'inode/directory' ? 'folder' : 'file'}' ${entity.name}`,
+        buttonOkay: 'Rename'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(name => {
+      if (name) {
+        this.fileService.renameFile(entity, name).subscribe((renamedFile: File) => console.log(renamedFile));
+      }
+    });
+  }
+
   getRightIcon(mimetype: string): string {
     if (mimetype.includes('image')) {
       return 'drive_image';
@@ -145,8 +161,12 @@ export class FileComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(FolderCreationDialogComponent, {
-      width: '250px'
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      width: '250px',
+      data: {
+        title: 'What will be the name if the folder',
+        buttonOkay: 'Create'
+      }
     });
 
     // after closing the dialog, send the request for folder creation
