@@ -4,40 +4,43 @@
 
 export const environment = {
   production: false,
-  apiEndoint: 'http://localhost:8080/api',
+  apiEndoint: 'http://localhost:8080',
 
   // register a new user
-  signupEndpoint: '/auth/signup',
+  signupEndpoint: '/api/auth/signup',
 
   // log in with credentials, obtain a jwt
-  signinEndpoint: '/auth/signin',
+  signinEndpoint: '/api/auth/signin',
 
   // check if username is already taken in database
-  checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability',
+  checkUsernameAvailabilityEndpoint: '/api/user/checkUsernameAvailability',
 
   // get user information (username, firstname, etc)
-  userInfoEndpoint: '/user/me',
+  userInfoEndpoint: '/api/user/me',
 
   // upload a file (/<UUID> can be added to upload file in given directory)
-  uploadFileEndpoint: '/files/upload',
+  uploadFileEndpoint: '/api/files/upload',
 
   // list all files in home directory (/<UUID> can be added to upload file in given directory)
-  listFilesEndpoint: '/folder',
+  listFilesEndpoint: '/api/folder',
 
   // create a folder (/<UUID> can be added to create directory in the given one)
-  createFolderEndpoint: '/folder',
+  createFolderEndpoint: '/api/folder',
 
   // rename a file (/<UUID> mandatory)
-  renameFileEndpoint: '/files',
+  renameFileEndpoint: '/api/files',
 
   // rename a folder (/<UUID> mandatory)
-  renameFolderEndpoint: '/folder',
+  renameFolderEndpoint: '/api/folder',
 
   // rename a folder (/<UUID> mandatory)
-  deleteFolderEndpoint: '/folder',
+  deleteFolderEndpoint: '/api/folder',
 
   // rename a folder (/<UUID> mandatory)
-  deleteFileEndpoint: '/files'
+  deleteFileEndpoint: '/api/files',
+
+  // download file (/<UUID> mandatory)
+  downloadFileEndpoint: '/download/files'
 };
 
 /*
