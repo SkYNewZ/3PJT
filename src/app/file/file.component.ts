@@ -119,7 +119,7 @@ export class FileComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(name => {
       if (name) {
-        this.fileService.renameFile(entity, name).subscribe((renamedFile: File) => console.log(renamedFile));
+        this.fileService.renameFile(entity, name).subscribe((renamedFile: File) => entity.name = renamedFile.name);
       }
     });
   }
