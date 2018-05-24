@@ -17,7 +17,7 @@ img {
   border-radius: 50%;
 }
 
-mat-progress-spinner {
+mat-progress-spinner.custom {
   position: absolute !important;
   top: calc(34% - 50px);
   left: calc(50% - 50px);
