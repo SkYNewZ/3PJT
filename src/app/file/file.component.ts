@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileService } from './file.service';
 import { File } from './file';
 import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
@@ -24,8 +24,7 @@ export class FileComponent implements OnInit {
   public displayedColumns: String[] = [
     'name',
     'createdAt',
-    'updatedAt',
-    'actions'
+    'updatedAt'
   ];
   public initialSelection = [];
   public allowMultiSelect = true;
@@ -229,5 +228,9 @@ export class FileComponent implements OnInit {
     folders = this.sortAlphabetically(folders);
     files = this.sortAlphabetically(files);
     this.dataSource = new MatTableDataSource(t.concat(folders).concat(files));
+  }
+
+  shareFile(entity: File | Folder) {
+    console.log('TODO: share');
   }
 }
