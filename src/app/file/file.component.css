@@ -33,3 +33,9 @@ table {
 .file-blue-icon {
   color: #4A85E6;
 }
+
+mat-progress-bar {
+  position: fixed;
+  bottom: 0;
+  z-index: 100;
+}

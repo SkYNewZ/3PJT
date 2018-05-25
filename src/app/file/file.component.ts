@@ -33,6 +33,7 @@ export class FileComponent implements OnInit {
     false,
     null
   );
+  public showProgressBar: Boolean = false;
 
   constructor(
     private fileService: FileService,
@@ -118,7 +119,9 @@ export class FileComponent implements OnInit {
 
   downloadFile(file: File): void {
     if (file.mimeType !== 'inode/directory') {
+      this.showProgressBar = true;
       this.fileService.downloadFile(file).subscribe((blob: Blob) => {
+        this.showProgressBar = false;
         const link: HTMLAnchorElement = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
         link.download = file.name + file.extention;

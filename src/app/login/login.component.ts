@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
   public returnUrl: string;
   public showLoader: Boolean = false;
   public loginButtonText: String = 'Sign in';
-  public loginButtonDisable: Boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -75,7 +74,6 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       this.showLoader = true;
       this.loginButtonText = 'Logging in...';
-      this.loginButtonDisable = true;
       // get token and create BehaviorSubject
       this.authService.getToken(this.form.value).subscribe((jwt: JwtApp) => {
         localStorage.setItem('access_token', jwt.accessToken);
@@ -89,7 +87,6 @@ export class LoginComponent implements OnInit {
         console.log(err);
         this.showLoader = false;
         this.loginButtonText = 'Sign in';
-        this.loginButtonDisable = false;
         if (err instanceof HttpErrorResponse && err.status === 401) {
           this.openSnackBar('Incorrect username or password');
           this.form.reset();

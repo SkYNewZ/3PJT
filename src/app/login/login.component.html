@@ -19,7 +19,7 @@
                 Please inform your password
               </mat-error>
             </mat-form-field>
-            <button mat-raised-button color="primary" [disabled]="loginButtonDisable" type="submit" class="button-margin">
+            <button mat-raised-button color="primary" [disabled]="showLoader" type="submit" class="button-margin">
               <div fxLayout="row" fxLayoutAlign="space-around center">
                 <span>{{ loginButtonText }}</span>
                 <mat-progress-spinner style="margin-left: 15px" *ngIf="showLoader" mode="indeterminate" diameter="20" color="warn"></mat-progress-spinner>
