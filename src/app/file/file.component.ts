@@ -159,6 +159,8 @@ export class FileComponent implements OnInit {
       return 'folder';
     } else if (mimetype.includes('text')) {
       return 'drive_doc';
+    } else if (mimetype.includes('video')) {
+      return 'drive_movie';
     } else {
       return 'file_copy';
     }
@@ -184,9 +186,9 @@ export class FileComponent implements OnInit {
   navigate(row: File | Folder): void {
     if (row.mimeType === 'inode/directory') {
       this.router.navigate(['/folder', row.uuid]);
-    } else {
-      console.log('file redirection not set');
-      this.router.navigate(['/file', row.uuid]);
+    } else if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
+      // todo
+      console.log('todo: view file on double click');
     }
   }
 
@@ -232,5 +234,9 @@ export class FileComponent implements OnInit {
 
   shareFile(entity: File | Folder) {
     console.log('TODO: share');
+  }
+
+  displayExtraVideoOrPhotoOption(file: File): boolean {
+    return (file.mimeType.includes('video') || file.mimeType.includes('image')) ? true : false;
   }
 }
