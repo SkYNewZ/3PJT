@@ -12,5 +12,5 @@ export const environment = {
   deleteFolderEndpoint: '/api/folder',
   renameFileEndpoint: '/api/files',
   deleteFileEndpoint: '/api/files',
-  downloadFileOrFolderEndpoint: '/download/files'
+  downloadFileEndpoint: '/download/files'
 };
