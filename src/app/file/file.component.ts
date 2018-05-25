@@ -116,9 +116,15 @@ export class FileComponent implements OnInit {
     });
   }
 
-  downloadFile(file: File) {
-    console.log('download this file');
-    console.log(file);
+  downloadFile(file: File): void {
+    if (file.mimeType !== 'inode/directory') {
+      this.fileService.downloadFile(file).subscribe((blob: Blob) => {
+        const link: HTMLAnchorElement = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = file.name + file.extention;
+        link.click();
+      });
+    }
   }
 
   renameEntity(entity: File | Folder) {
@@ -186,7 +192,7 @@ export class FileComponent implements OnInit {
     const dialogRef = this.dialog.open(InputDialogComponent, {
       width: '250px',
       data: {
-        title: 'What will be the name of the folder',
+        title: 'What will be the name of the folder ?',
         buttonOkay: 'Create'
       }
     });

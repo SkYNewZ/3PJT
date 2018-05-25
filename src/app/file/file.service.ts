@@ -56,4 +56,12 @@ export class FileService {
       return this.http.delete<File>(`${environment.apiEndoint + environment.deleteFileEndpoint}/${entity.uuid}`);
     }
   }
+
+  downloadFile(entity: File): Observable<Blob> {
+    return this.http.get(`${environment.apiEndoint + environment.downloadFileEndpoint}/${entity.uuid}`, {
+      responseType: 'blob'
+    }).map((blob: Blob) => {
+      return new Blob([blob], { type: entity.mimeType });
+    });
+  }
 }
