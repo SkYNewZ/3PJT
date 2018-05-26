@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   public returnUrl: string;
   public showLoader: Boolean = false;
   public loginButtonText: String = 'Sign in';
+  public registerButtonText: String = 'Register';
 
   constructor(
     private fb: FormBuilder,
@@ -101,12 +102,18 @@ export class LoginComponent implements OnInit {
 
   onRegister(): void {
     if (this.registerForm.valid) {
+      this.showLoader = true;
+      this.registerButtonText = 'Please wait...';
       this.authService.register(this.registerForm.value).subscribe((login) => {
         this.selectedTab = 0;
         this.form.get('usernameOrEmail').patchValue(this.registerForm.get('username').value);
         this.registerForm.reset();
         this.openSnackBar('Registration successfully');
+        this.showLoader = false;
+        this.registerButtonText = 'Register';
       }, (err: any) => {
+        this.showLoader = false;
+        this.registerButtonText = 'Register';
         const e = plainToClass(LoginSuccess, err.error);
         if (e instanceof LoginSuccess) {
           this.registerForm.get('password').reset();

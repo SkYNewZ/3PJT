@@ -60,7 +60,12 @@
                 Password must contain at leat 5 characters and 40 characters
               </mat-error>
             </mat-form-field>
-            <button mat-raised-button color="primary" type="submit" class="button-margin">Register</button>
+            <button mat-raised-button color="primary" type="submit" class="button-margin" [disabled]="showLoader">
+              <div fxLayout="row" fxLayoutAlign="space-around center">
+                <span>{{ registerButtonText }}</span>
+                <mat-progress-spinner style="margin-left: 15px" *ngIf="showLoader" mode="indeterminate" diameter="20" color="warn"></mat-progress-spinner>
+              </div>
+            </button>
           </form>
         </mat-tab>
 
