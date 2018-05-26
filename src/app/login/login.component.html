@@ -57,7 +57,7 @@
             <mat-form-field class="full-width-input">
               <input matInput type="password" placeholder="Password" formControlName="password" required>
               <mat-error *ngIf="isInvalidPassword()">
-                Password must contain at leat 5 characters and 40 characters
+                Password must contain at leat 6 characters and 20 characters
               </mat-error>
             </mat-form-field>
             <button mat-raised-button color="primary" type="submit" class="button-margin" [disabled]="showLoader">
