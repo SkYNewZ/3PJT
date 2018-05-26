@@ -13,7 +13,8 @@ const routes: Routes = [
   {
     path: 'profile',
     component: UserProfileComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard]
   },
   {
     path: '',
@@ -33,4 +34,4 @@ const routes: Routes = [
   imports: [CommonModule, RouterModule.forRoot(routes)],
   declarations: []
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
