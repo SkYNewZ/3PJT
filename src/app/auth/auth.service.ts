@@ -44,7 +44,7 @@ export class AuthService {
     this.user.next(new UserApp());
     localStorage.removeItem('access_token');
     this.router.navigateByUrl('/login');
-    this.socialAuthService.signOut();
+    // this.socialAuthService.signOut(); REMOVED 26/05/2018, it disconnect from the social network
   }
 
   register(user: LoginUser): Observable<LoginSuccess> {
