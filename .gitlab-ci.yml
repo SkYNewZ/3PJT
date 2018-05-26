@@ -4,12 +4,6 @@ image: docker:latest
 variables:
     DOCKER_DRIVER: overlay2
 
-cache:
-  untracked: true
-  key: "$CI_BUILD_REF_NAME"
-  paths:
-    - node_modules/
-
 services:
   - docker:dind
 

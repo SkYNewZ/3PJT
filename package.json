@@ -12,6 +12,17 @@
     "docker:build": "docker build -t skynewz/supdrive-front .",
     "docker:run": "docker run -it --rm -p 80:80 skynewz/supdrive-front"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:SkYNewZ/supdrive-front.git"
+  },
+  "author": {
+    "email": "quentin@lemairepro.fr",
+    "name": "SkYNewZ",
+    "url": "https://www.lemairepro.fr"
+  },
+  "icon": "https://s3.eu-west-3.amazonaws.com/supdrive/icon.png",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@angular/animation": "^4.0.0-beta.8",

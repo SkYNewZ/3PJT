@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  ValidatorFn,
+  AbstractControl
+} from '@angular/forms';
 import { AuthService } from './../auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '../models/api-error';
@@ -45,7 +52,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['redirect_uri'] || '/';
-    // this.socialLoginService.authState.subscribe((user: SocialUser) => this.authService.socialLoginSubscription(user, this.returnUrl));
     const t = this.jwtService.tokenGetter();
     this.form = this.fb.group({
       usernameOrEmail: ['', Validators.required],
@@ -56,9 +62,15 @@ export class LoginComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', Validators.compose([Validators.required, Validators.email])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])]
+      password: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(20)
+        ])
+      ]
     });
-
   }
 
   isFieldInvalid(field: string, form: FormGroup): boolean {
@@ -70,8 +82,10 @@ export class LoginComponent implements OnInit {
 
   isInvalidPassword(): boolean {
     return (
-      (!this.registerForm.get('password').valid && this.registerForm.get('password').touched) ||
-      (this.registerForm.get('password').untouched && this.registerFormSubmitAttempt)
+      (!this.registerForm.get('password').valid &&
+        this.registerForm.get('password').touched) ||
+      (this.registerForm.get('password').untouched &&
+        this.registerFormSubmitAttempt)
     );
   }
 
@@ -80,25 +94,28 @@ export class LoginComponent implements OnInit {
       this.showLoader = true;
       this.loginButtonText = 'Logging in...';
       // get token and create BehaviorSubject
-      this.authService.getToken(this.form.value).subscribe((jwt: JwtApp) => {
-        localStorage.setItem('access_token', jwt.accessToken);
-        // get user info, token will be add by @auth0/angular-jwt
-        this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
-          this.authService.login(user);
-          this.location.replaceState('/');
-          this.router.navigateByUrl(this.returnUrl);
-        });
-      }, (err) => {
-        console.log(err);
-        this.showLoader = false;
-        this.loginButtonText = 'Sign in';
-        if (err instanceof HttpErrorResponse && err.status === 401) {
-          this.openSnackBar('Incorrect username or password');
-          this.form.reset();
-        } else if (err instanceof HttpErrorResponse && err.status === 0) {
-          this.openSnackBar('Server unreachable, please try again later');
+      this.authService.getToken(this.form.value).subscribe(
+        (jwt: JwtApp) => {
+          localStorage.setItem('access_token', jwt.accessToken);
+          // get user info, token will be add by @auth0/angular-jwt
+          this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
+            this.authService.login(user);
+            this.location.replaceState('/');
+            this.router.navigateByUrl(this.returnUrl);
+          });
+        },
+        err => {
+          console.log(err);
+          this.showLoader = false;
+          this.loginButtonText = 'Sign in';
+          if (err instanceof HttpErrorResponse && err.status === 401) {
+            this.openSnackBar('Incorrect username or password');
+            this.form.reset();
+          } else if (err instanceof HttpErrorResponse && err.status === 0) {
+            this.openSnackBar('Server unreachable, please try again later');
+          }
         }
-      });
+      );
     }
     this.formSubmitAttempt = true;
   }
@@ -107,36 +124,41 @@ export class LoginComponent implements OnInit {
     if (this.registerForm.valid) {
       this.showLoader = true;
       this.registerButtonText = 'Please wait...';
-      this.authService.register(this.registerForm.value).subscribe((login) => {
-        this.selectedTab = 0;
-        this.form.get('usernameOrEmail').patchValue(this.registerForm.get('username').value);
-        this.registerForm.reset();
-        this.openSnackBar('Registration successfully');
-        this.showLoader = false;
-        this.registerButtonText = 'Register';
-      }, (err: any) => {
-        this.showLoader = false;
-        this.registerButtonText = 'Register';
-        const e = plainToClass(LoginSuccess, err.error);
-        if (e instanceof LoginSuccess) {
-          this.registerForm.get('password').reset();
-          if (e.message.includes('mail')) {
-            this.registerForm.get('email').reset();
-            this.openSnackBar(e.message);
-          }
-          if (e.message.includes('Username')) {
-            this.registerForm.get('username').reset();
-            this.openSnackBar(e.message);
-          }
-          if (e.message === 'User Role not set.') {
+      this.authService.register(this.registerForm.value).subscribe(
+        login => {
+          this.selectedTab = 0;
+          this.form
+            .get('usernameOrEmail')
+            .patchValue(this.registerForm.get('username').value);
+          this.registerForm.reset();
+          this.openSnackBar('Registration successfully');
+          this.showLoader = false;
+          this.registerButtonText = 'Register';
+        },
+        (err: any) => {
+          this.showLoader = false;
+          this.registerButtonText = 'Register';
+          const e = plainToClass(LoginSuccess, err.error);
+          if (e instanceof LoginSuccess) {
+            this.registerForm.get('password').reset();
+            if (e.message.includes('mail')) {
+              this.registerForm.get('email').reset();
+              this.openSnackBar(e.message);
+            }
+            if (e.message.includes('Username')) {
+              this.registerForm.get('username').reset();
+              this.openSnackBar(e.message);
+            }
+            if (e.message === 'User Role not set.') {
+              this.openSnackBar('Unexpected error, please try again later');
+              console.log(e);
+            }
+          } else {
             this.openSnackBar('Unexpected error, please try again later');
             console.log(e);
           }
-        } else {
-          this.openSnackBar('Unexpected error, please try again later');
-          console.log(e);
         }
-      });
+      );
     }
     this.registerFormSubmitAttempt = true;
   }
