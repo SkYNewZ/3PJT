@@ -26,10 +26,6 @@ a {
   cursor: pointer;
 }
 
-table {
-  margin-bottom: 50px;
-}
-
 .file-blue-icon {
   color: #4A85E6;
 }
@@ -38,4 +34,14 @@ mat-progress-bar {
   position: fixed;
   bottom: 0;
   z-index: 100;
+}
+
+::ng-deep .drop-zone {
+  border: none !important;
+  border-radius: 0 !important;
+  width: 100%
+}
+
+::ng-deep .drop-zone .content {
+  color: #7F7F7F !important;
 }

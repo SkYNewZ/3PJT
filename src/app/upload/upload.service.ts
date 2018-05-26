@@ -13,8 +13,9 @@ import { File as ApiFile } from '../file/file';
 
 @Injectable()
 export class UploadService {
-  constructor(private http: HttpClient, private ss: SharedService) {}
+  constructor(private http: HttpClient, private ss: SharedService) { }
 
+  // upload a set of file
   public upload(
     files: Set<File>,
     currentDirectoryUuid?: string
@@ -71,5 +72,16 @@ export class UploadService {
 
     // return the map of progress.observables
     return status;
+  }
+
+  // upload a single file
+  public simpleUpload(file: File, currentDirectoryUuid?: string): Observable<ApiFile> {
+    let url: string = environment.apiEndoint + environment.uploadFileEndpoint;
+    if (currentDirectoryUuid) {
+      url += `/${currentDirectoryUuid}`;
+    }
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<ApiFile>(url, formData);
   }
 }

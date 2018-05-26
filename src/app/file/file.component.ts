@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FileService } from './file.service';
-import { File } from './file';
+import { File as ApiFile } from './file';
 import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiListElement } from './list-element';
@@ -10,15 +10,19 @@ import { Location } from '@angular/common';
 import { SharedService } from '../shared.service';
 import { InputDialogComponent } from './input-dialog/input-dialog.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { UploadEvent, FileSystemFileEntry, FileSystemDirectoryEntry, UploadFile } from 'ngx-file-drop';
+import { UploadService } from '../upload/upload.service';
+import 'rxjs/operator/map';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-file',
   templateUrl: './file.component.html',
   styleUrls: ['./file.component.css']
 })
-export class FileComponent implements OnInit {
+export class FileComponent implements OnInit, OnDestroy {
   public showLoader: Boolean = true;
-  public dataSource: MatTableDataSource<File | Folder> = new MatTableDataSource(
+  public dataSource: MatTableDataSource<ApiFile | Folder> = new MatTableDataSource(
     []
   );
   public displayedColumns: String[] = [
@@ -28,11 +32,13 @@ export class FileComponent implements OnInit {
   ];
   public initialSelection = [];
   public allowMultiSelect = true;
-  public selection: SelectionModel<File> = new SelectionModel<File>(
+  public selection: SelectionModel<ApiFile> = new SelectionModel<ApiFile>(
     false,
     null
   );
   public showProgressBar: Boolean = false;
+  private newFileSub: ISubscription;
+  private uuidSub: ISubscription;
 
   constructor(
     private fileService: FileService,
@@ -40,19 +46,25 @@ export class FileComponent implements OnInit {
     private location: Location,
     private router: Router,
     private ss: SharedService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private uploadService: UploadService
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.uuidSub = this.route.params.subscribe(params => {
       this.getFiles(params['uuid']);
     });
-    this.ss.getLastFileUploaded().subscribe((item: File) => {
+    this.newFileSub = this.ss.getLastFileUploaded().subscribe((item: ApiFile) => {
       // push file if a new is upload
       this.dataSource.data.push(item);
       this.dataSource = new MatTableDataSource(this.dataSource.data);
       this.orderDatasource();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.newFileSub.unsubscribe();
+    this.uuidSub.unsubscribe();
   }
 
   getFiles(parentFolderUuid?: string): void {
@@ -61,7 +73,7 @@ export class FileComponent implements OnInit {
       .subscribe((elements: ApiListElement) => {
         if (!(elements.files.length === 0 && elements.folders.length === 0)) {
           const e: ApiListElement = ApiListElement.FROM_JSON(elements);
-          const t: (File | Folder)[] = [];
+          const t: (ApiFile | Folder)[] = [];
           // create the folder array
           let folderTab: Folder[] = [];
           e.folders.forEach((folder, idx) => {
@@ -72,9 +84,9 @@ export class FileComponent implements OnInit {
           folderTab = this.sortAlphabetically(folderTab);
 
           // create the file array
-          let filetab: File[] = [];
+          let filetab: ApiFile[] = [];
           e.files.forEach((file, idx) => {
-            const f: File = File.FROM_JSON(file);
+            const f: ApiFile = ApiFile.FROM_JSON(file);
             filetab.push(f);
           });
           // sort
@@ -97,7 +109,7 @@ export class FileComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
-  deleteEntity(entity: File | Folder) {
+  deleteEntity(entity: ApiFile | Folder) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: {
@@ -116,7 +128,7 @@ export class FileComponent implements OnInit {
     });
   }
 
-  downloadFile(file: File): void {
+  downloadFile(file: ApiFile): void {
     if (file.mimeType !== 'inode/directory') {
       this.showProgressBar = true;
       this.fileService.downloadFile(file).subscribe((blob: Blob) => {
@@ -129,7 +141,7 @@ export class FileComponent implements OnInit {
     }
   }
 
-  renameEntity(entity: File | Folder) {
+  renameEntity(entity: ApiFile | Folder) {
     const dialogRef = this.dialog.open(InputDialogComponent, {
       width: '250px',
       data: {
@@ -141,7 +153,7 @@ export class FileComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(name => {
       if (name) {
-        this.fileService.renameFile(entity, name).subscribe((renamedFile: File) => entity.name = renamedFile.name);
+        this.fileService.renameFile(entity, name).subscribe((renamedFile: ApiFile) => entity.name = renamedFile.name);
       }
     });
   }
@@ -183,7 +195,7 @@ export class FileComponent implements OnInit {
     this.location.back();
   }
 
-  navigate(row: File | Folder): void {
+  navigate(row: ApiFile | Folder): void {
     if (row.mimeType === 'inode/directory') {
       this.router.navigate(['/folder', row.uuid]);
     } else if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
@@ -218,8 +230,8 @@ export class FileComponent implements OnInit {
   orderDatasource(): void {
     let files: any[] = [];
     let folders: any[] = [];
-    const t: (File | Folder)[] = [];
-    this.dataSource.data.forEach((item: File | Folder) => {
+    const t: (ApiFile | Folder)[] = [];
+    this.dataSource.data.forEach((item: ApiFile | Folder) => {
       if (item.mimeType === 'inode/directory') {
         folders.push(item);
       } else {
@@ -232,11 +244,28 @@ export class FileComponent implements OnInit {
     this.dataSource = new MatTableDataSource(t.concat(folders).concat(files));
   }
 
-  shareFile(entity: File | Folder) {
+  shareFile(entity: ApiFile | Folder): void {
     console.log('TODO: share');
   }
 
-  displayExtraVideoOrPhotoOption(file: File): boolean {
+  displayExtraVideoOrPhotoOption(file: ApiFile): boolean {
     return (file.mimeType.includes('video') || file.mimeType.includes('image')) ? true : false;
+  }
+
+  dropped(event: UploadEvent): void {
+    for (const droppedFile of event.files) {
+      // Is it a file?
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          this.uploadService.simpleUpload(file, this.route.snapshot.paramMap.get('uuid')).subscribe((d: ApiFile) => {
+            // TODO: fix this below, it does not work. I think it is the upload event what stay focus on
+            this.dataSource.data.push(d);
+            this.dataSource = new MatTableDataSource(this.dataSource.data);
+            this.orderDatasource();
+          });
+        });
+      }
+    }
   }
 }

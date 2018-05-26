@@ -62,6 +62,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'selected': selection.isSelected(row)}" (click)="selection.select(row)"
           (dblclick)="navigate(row)"></tr>
       </table>
+      <file-drop headertext="Drop files here" (onFileDrop)="dropped($event)"></file-drop>
     </div>
   </mat-card-content>
 </mat-card>
