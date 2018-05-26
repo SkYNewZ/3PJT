@@ -99,4 +99,26 @@ export class AuthService {
       });
     });
   }
+
+  // socialLoginSubscription(social: SocialUser, returnUrl?: string): void {
+  //   console.log(social);
+  //   if (social) {
+  //     const body: { accessToken: string } = {
+  //       accessToken: social.authToken
+  //     };
+  //     this.http.post<{ accessToken: string }>(environment.getSocialSignInEndpoint(social.provider.toLowerCase()), body).subscribe((jwt: JwtApp) => {
+  //       localStorage.setItem('access_token', jwt.accessToken);
+  //       const user: UserApp = new UserApp();
+  //       user.$firstName = social.firstName;
+  //       user.$lastName = social.lastName;
+  //       user.$email = social.email;
+  //       user.$photoUrl = social.photoUrl;
+  //       user.$provider = 'facebook';
+  //       this.user.next(user);
+  //       this.location.replaceState('/');
+  //       this.router.navigateByUrl(returnUrl);
+  //       console.log(user);
+  //     });
+  //   }
+  // }
 }
