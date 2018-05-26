@@ -9,6 +9,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { UserApp } from '../models/main-user';
 import { JwtApp } from '../models/jwt';
+import { AuthService as SocialAuthService } from 'angularx-social-login';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,9 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private socialAuthService: SocialAuthService,
+    private location: Location
   ) { }
 
   public get isLoggedIn(): Observable<UserApp> {
@@ -26,7 +31,9 @@ export class AuthService {
   }
 
   login(user: UserApp) {
-    this.user.next(UserApp.FROM_JSON(user));
+    const userapp: UserApp = UserApp.FROM_JSON(user);
+    userapp.$photoUrl = userapp.getGravatarUrl();
+    this.user.next(userapp);
   }
 
   getToken(user: User): Observable<JwtApp> {
@@ -37,6 +44,7 @@ export class AuthService {
     this.user.next(new UserApp());
     localStorage.removeItem('access_token');
     this.router.navigateByUrl('/login');
+    this.socialAuthService.signOut();
   }
 
   register(user: LoginUser): Observable<LoginSuccess> {
@@ -45,5 +53,50 @@ export class AuthService {
 
   checkUsernameAvailability(username: string): Observable<Boolean> {
     return this.http.get<Boolean>(`${environment.apiEndoint + environment.checkUsernameAvailabilityEndpoint}?username=${username}`);
+  }
+
+  signInWithGoogle(returnUrl?: string): void {
+    // get google info
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then((googleUser: SocialUser) => {
+      // get api token
+      const body: { accessToken: string } = {
+        accessToken: googleUser.authToken
+      };
+      this.http.post<{ accessToken: string }>(environment.getSocialSignInEndpoint('google'), body).subscribe((jwt: JwtApp) => {
+        localStorage.setItem('access_token', jwt.accessToken);
+        const user: UserApp = new UserApp();
+        user.$firstName = googleUser.name.split(' ')[0];
+        user.$lastName = googleUser.name.split(' ')[1];
+        user.$email = googleUser.email;
+        user.$photoUrl = googleUser.photoUrl;
+        user.$provider = 'google';
+        this.user.next(user);
+        this.location.replaceState('/');
+        this.router.navigateByUrl(returnUrl);
+        console.log(user);
+      });
+    });
+  }
+
+  signInWithFB(returnUrl?: string): void {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then((facebookUser: SocialUser) => {
+      // get api token
+      const body: { accessToken: string } = {
+        accessToken: facebookUser.authToken
+      };
+      this.http.post<{ accessToken: string }>(environment.getSocialSignInEndpoint('facebook'), body).subscribe((jwt: JwtApp) => {
+        localStorage.setItem('access_token', jwt.accessToken);
+        const user: UserApp = new UserApp();
+        user.$firstName = facebookUser.firstName;
+        user.$lastName = facebookUser.lastName;
+        user.$email = facebookUser.email;
+        user.$photoUrl = facebookUser.photoUrl;
+        user.$provider = 'facebook';
+        this.user.next(user);
+        this.location.replaceState('/');
+        this.router.navigateByUrl(returnUrl);
+        console.log(user);
+      });
+    });
   }
 }

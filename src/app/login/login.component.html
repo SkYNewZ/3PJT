@@ -70,18 +70,18 @@
     <mat-card-content>
       <mat-card-subtitle>Or connect with :</mat-card-subtitle>
       <div xLayout="row" fxLayoutAlign="space-evenly center">
-        <button mat-raised-button color="link">
+        <button mat-raised-button color="link" (click)="signInWithGoogle()">
           <i class="fa fa-google-plus-official" style="color: #d62d20" aria-hidden="true"></i>
           <span class="social-network">Google+</span>
         </button>
-        <button mat-raised-button color="link">
+        <button mat-raised-button color="link" (click)="signInWithFB()">
           <i class="fa fa-facebook-official" style="color: #3b5998" aria-hidden="true"></i>
           <span class="social-network">Facebook</span>
         </button>
-        <button mat-raised-button color="link">
+        <!-- <button mat-raised-button color="link">
           <i class="fa fa-linkedin" style="color: #0376B4" aria-hidden="true"></i>
           <span class="social-network">LinkedIn</span>
-        </button>
+        </button> -->
       </div>
     </mat-card-content>
   </mat-card>

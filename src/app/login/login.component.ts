@@ -12,6 +12,7 @@ import { UserApp } from '../models/main-user';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Location } from '@angular/common';
+import { SocialUser } from 'angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -136,5 +137,13 @@ export class LoginComponent implements OnInit {
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
+  }
+
+  signInWithGoogle(): void {
+    this.authService.signInWithGoogle(this.returnUrl);
+  }
+
+  signInWithFB(): void {
+    this.authService.signInWithFB(this.returnUrl);
   }
 }
