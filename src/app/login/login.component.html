@@ -57,10 +57,15 @@
             <mat-form-field class="full-width-input">
               <input matInput type="password" placeholder="Password" formControlName="password" required>
               <mat-error *ngIf="isInvalidPassword()">
-                Password must contain at leat 5 characters and 40 characters
+                Password must contain at leat 6 characters and 20 characters
               </mat-error>
             </mat-form-field>
-            <button mat-raised-button color="primary" type="submit" class="button-margin">Register</button>
+            <button mat-raised-button color="primary" type="submit" class="button-margin" [disabled]="showLoader">
+              <div fxLayout="row" fxLayoutAlign="space-around center">
+                <span>{{ registerButtonText }}</span>
+                <mat-progress-spinner style="margin-left: 15px" *ngIf="showLoader" mode="indeterminate" diameter="20" color="warn"></mat-progress-spinner>
+              </div>
+            </button>
           </form>
         </mat-tab>
 
@@ -70,18 +75,18 @@
     <mat-card-content>
       <mat-card-subtitle>Or connect with :</mat-card-subtitle>
       <div xLayout="row" fxLayoutAlign="space-evenly center">
-        <button mat-raised-button color="link">
+        <button mat-raised-button color="link" (click)="signInWithGoogle()">
           <i class="fa fa-google-plus-official" style="color: #d62d20" aria-hidden="true"></i>
           <span class="social-network">Google+</span>
         </button>
-        <button mat-raised-button color="link">
+        <button mat-raised-button color="link" (click)="signInWithFB()">
           <i class="fa fa-facebook-official" style="color: #3b5998" aria-hidden="true"></i>
           <span class="social-network">Facebook</span>
         </button>
-        <button mat-raised-button color="link">
+        <!-- <button mat-raised-button color="link">
           <i class="fa fa-linkedin" style="color: #0376B4" aria-hidden="true"></i>
           <span class="social-network">LinkedIn</span>
-        </button>
+        </button> -->
       </div>
     </mat-card-content>
   </mat-card>

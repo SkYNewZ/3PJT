@@ -12,6 +12,8 @@ import { UserApp } from '../models/main-user';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Location } from '@angular/common';
+import { SocialUser } from 'angularx-social-login';
+import { AuthService as SocialAuthService } from 'angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit {
   public returnUrl: string;
   public showLoader: Boolean = false;
   public loginButtonText: String = 'Sign in';
+  public registerButtonText: String = 'Register';
 
   constructor(
     private fb: FormBuilder,
@@ -36,11 +39,13 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private jwtService: JwtHelperService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private socialLoginService: SocialAuthService
   ) { }
 
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['redirect_uri'] || '/';
+    // this.socialLoginService.authState.subscribe((user: SocialUser) => this.authService.socialLoginSubscription(user, this.returnUrl));
     const t = this.jwtService.tokenGetter();
     this.form = this.fb.group({
       usernameOrEmail: ['', Validators.required],
@@ -51,7 +56,7 @@ export class LoginComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', Validators.compose([Validators.required, Validators.email])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(40)])]
+      password: ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])]
     });
 
   }
@@ -100,12 +105,18 @@ export class LoginComponent implements OnInit {
 
   onRegister(): void {
     if (this.registerForm.valid) {
+      this.showLoader = true;
+      this.registerButtonText = 'Please wait...';
       this.authService.register(this.registerForm.value).subscribe((login) => {
         this.selectedTab = 0;
         this.form.get('usernameOrEmail').patchValue(this.registerForm.get('username').value);
         this.registerForm.reset();
         this.openSnackBar('Registration successfully');
+        this.showLoader = false;
+        this.registerButtonText = 'Register';
       }, (err: any) => {
+        this.showLoader = false;
+        this.registerButtonText = 'Register';
         const e = plainToClass(LoginSuccess, err.error);
         if (e instanceof LoginSuccess) {
           this.registerForm.get('password').reset();
@@ -136,5 +147,13 @@ export class LoginComponent implements OnInit {
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
+  }
+
+  signInWithGoogle(): void {
+    this.authService.signInWithGoogle(this.returnUrl);
+  }
+
+  signInWithFB(): void {
+    this.authService.signInWithFB(this.returnUrl);
   }
 }

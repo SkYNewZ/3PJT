@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   CanActivate,
+  CanActivateChild,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router
@@ -16,13 +17,15 @@ import { MatSnackBar } from '@angular/material';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(
     private authService: AuthService,
     private router: Router,
     private jwtService: JwtHelperService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
+
+  // common auth
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -67,6 +70,14 @@ export class AuthGuard implements CanActivate {
         }
       });
     }
+    return true;
+  }
+
+  // forbidden for socials users
+  canActivateChild(): boolean {
+    this.authService.isLoggedIn.take(1).subscribe((user: UserApp) => {
+      return user.$provider !== 'supdrive' ? false : true;
+    });
     return true;
   }
 

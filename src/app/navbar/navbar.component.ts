@@ -13,7 +13,7 @@ import { Md5 } from 'ts-md5';
 export class NavbarComponent implements OnInit {
   public user: UserApp;
   isLoggedIn: Boolean = false;
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.authService.isLoggedIn.subscribe((user: UserApp) => {
@@ -22,7 +22,6 @@ export class NavbarComponent implements OnInit {
       } else {
         this.isLoggedIn = true;
         this.user = user;
-        this.getGravatarUrl();
       }
     });
   }
@@ -30,10 +29,6 @@ export class NavbarComponent implements OnInit {
   onLogout() {
     this.isLoggedIn = false;
     this.authService.logout();
-  }
-
-  getGravatarUrl(): string {
-    return 'https://www.gravatar.com/avatar/' + Md5.hashStr(this.user.$email);
   }
 
   getFormatedFirstnameAndLastname(): string {

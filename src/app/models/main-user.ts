@@ -1,14 +1,51 @@
 import { plainToClass, classToPlain } from 'class-transformer';
+import { Md5 } from 'ts-md5';
 
 export class UserApp {
     private firstName: string;
     private lastName: string;
-    private username: string;
     private email: string;
-    private accountNonExpired: boolean;
-    private accountNonLocked: boolean;
-    private credentialsNonExpired: boolean;
-    private enabled: boolean;
+
+    // optionnal beacause of facebook/google user
+    private username?: string;
+    private accountNonExpired?: boolean;
+    private accountNonLocked?: boolean;
+    private credentialsNonExpired?: boolean;
+    private enabled?: boolean;
+    private photoUrl?: string;
+    private provider: 'supdrive' | 'facebook' | 'google';
+
+    /**
+     * Getter $provider
+     * @return {'supdrive' | 'facebook' | 'google'}
+     */
+    public get $provider(): 'supdrive' | 'facebook' | 'google' {
+        return this.provider;
+    }
+
+    /**
+     * Setter $provider
+     * @param {'supdrive' | 'facebook' | 'google'} value
+     */
+    public set $provider(value: 'supdrive' | 'facebook' | 'google') {
+        this.provider = value;
+    }
+
+    /**
+     * Getter $photoUrl
+     * @return {string}
+     */
+    public get $photoUrl(): string {
+        return this.photoUrl;
+    }
+
+    /**
+     * Setter $photoUrl
+     * @param {string} value
+     */
+    public set $photoUrl(value: string) {
+        this.photoUrl = value;
+    }
 
     public static FROM_JSON(jsonObject: {}): UserApp {
         return plainToClass(UserApp, jsonObject);
@@ -144,6 +181,10 @@ export class UserApp {
      */
     public set $enabled(value: boolean) {
         this.enabled = value;
+    }
+
+    public getGravatarUrl(): string {
+        return 'https://www.gravatar.com/avatar/' + Md5.hashStr(this.email);
     }
 
 }
