@@ -61,7 +61,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       return false;
     } else {
       this.authService.isLoggedIn.take(1).subscribe((user: UserApp) => {
-        if (!user.$email) {
+        if (!user.email) {
           this.logout();
           this.router.navigate(['login'], {
             queryParams: { redirect_uri: state.url }
@@ -76,7 +76,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   // forbidden for socials users
   canActivateChild(): boolean {
     this.authService.isLoggedIn.take(1).subscribe((user: UserApp) => {
-      return user.$provider !== 'supdrive' ? false : true;
+      return user.provider !== 'supdrive' ? false : true;
     });
     return true;
   }

@@ -17,7 +17,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.authService.isLoggedIn.subscribe((user: UserApp) => {
-      if (!user.$email) {
+      if (!user.email) {
         this.isLoggedIn = false;
       } else {
         this.isLoggedIn = true;
@@ -33,11 +33,11 @@ export class NavbarComponent implements OnInit {
 
   getFormatedFirstnameAndLastname(): string {
     return (
-      this.user.$firstName.charAt(0).toUpperCase() +
-      this.user.$firstName.substr(1).toLowerCase() +
+      this.user.firstname.charAt(0).toUpperCase() +
+      this.user.firstname.substr(1).toLowerCase() +
       ' ' +
-      this.user.$lastName.charAt(0).toUpperCase() +
-      this.user.$lastName.substr(1).toLowerCase()
+      this.user.lastname.charAt(0).toUpperCase() +
+      this.user.lastname.substr(1).toLowerCase()
     );
   }
 }

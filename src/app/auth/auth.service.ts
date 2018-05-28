@@ -37,9 +37,8 @@ export class AuthService {
   }
 
   login(user: UserApp) {
-    const userapp: UserApp = UserApp.FROM_JSON(user);
-    userapp.$photoUrl = userapp.getGravatarUrl();
-    this.user.next(userapp);
+    user.photoUrl = user.getGravatarUrl(user.email);
+    this.user.next(user);
   }
 
   getToken(user: User): Observable<JwtApp> {
@@ -87,11 +86,11 @@ export class AuthService {
           .subscribe((jwt: JwtApp) => {
             localStorage.setItem('access_token', jwt.accessToken);
             const user: UserApp = new UserApp();
-            user.$firstName = googleUser.name.split(' ')[0];
-            user.$lastName = googleUser.name.split(' ')[1];
-            user.$email = googleUser.email;
-            user.$photoUrl = googleUser.photoUrl;
-            user.$provider = 'google';
+            user.firstname = googleUser.name.split(' ')[0];
+            user.lastname = googleUser.name.split(' ')[1];
+            user.email = googleUser.email;
+            user.photoUrl = googleUser.photoUrl;
+            user.provider = 'google';
             this.user.next(user);
             this.location.replaceState('/');
             this.router.navigateByUrl(returnUrl);
@@ -116,11 +115,11 @@ export class AuthService {
           .subscribe((jwt: JwtApp) => {
             localStorage.setItem('access_token', jwt.accessToken);
             const user: UserApp = new UserApp();
-            user.$firstName = facebookUser.firstName;
-            user.$lastName = facebookUser.lastName;
-            user.$email = facebookUser.email;
-            user.$photoUrl = facebookUser.photoUrl;
-            user.$provider = 'facebook';
+            user.firstname = facebookUser.firstName;
+            user.lastname = facebookUser.lastName;
+            user.email = facebookUser.email;
+            user.photoUrl = facebookUser.photoUrl;
+            user.provider = 'facebook';
             this.user.next(user);
             this.location.replaceState('/');
             this.router.navigateByUrl(returnUrl);
