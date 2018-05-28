@@ -29,22 +29,19 @@ export class UserProfileComponent implements OnInit {
     this.userService.getUserInfo().subscribe((user: UserApp) => {
       this.user = UserApp.FROM_JSON(user);
       this.form = this.fb.group({
-        firstName: [this.user.$firstName, Validators.required],
-        lastName: [this.user.$lastName, Validators.required],
-        username: [this.user.$username, Validators.required],
-        email: [this.user.$email, Validators.compose([Validators.required, Validators.email])],
+        firstName: [this.user.firstname, Validators.required],
+        lastName: [this.user.lastname, Validators.required],
+        username: [this.user.username, Validators.required],
+        email: [this.user.email, Validators.compose([Validators.required, Validators.email])],
         password: ['', Validators.compose([Validators.minLength(5), Validators.maxLength(40)])],
         accountNonExpired: [true, Validators.required],
         accountNonLocked: [true, Validators.required],
         credentialsNonExpired: [true, Validators.required],
+        provider: ['supdrive', Validators.required],
         enabled: [true, Validators.required]
       });
       this.showLoader = false;
     });
-  }
-
-  getGravatarUrl(): string {
-    return 'https://www.gravatar.com/avatar/' + Md5.hashStr(this.user.$email);
   }
 
   onSubmit(): void {

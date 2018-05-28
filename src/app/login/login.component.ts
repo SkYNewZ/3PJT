@@ -99,7 +99,8 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('access_token', jwt.accessToken);
           // get user info, token will be add by @auth0/angular-jwt
           this.userProfileService.getUserInfo().subscribe((user: UserApp) => {
-            this.authService.login(user);
+            const u: UserApp = UserApp.FROM_JSON(user);
+            this.authService.login(u);
             this.location.replaceState('/');
             this.router.navigateByUrl(this.returnUrl);
           });
