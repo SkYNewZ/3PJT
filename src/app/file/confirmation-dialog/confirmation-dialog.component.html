@@ -1,0 +1,19 @@
+<div style="text-align: center">
+  <h2 mat-dialog-title>Deletion</h2>
+  <div mat-dialog-content>
+    <p>Are you sure ?</p>
+    <p>
+      <ng-container *ngIf="data.mimeType === 'inode/directory'">
+        <mat-icon style="color: gray;">folder</mat-icon>
+      </ng-container>
+      <ng-container *ngIf="data.mimeType !== 'inode/directory'">
+        <mat-icon [svgIcon]="data.svgIcon" [ngClass]="{'file-blue-icon': data.svgIcon == 'file_copy'}"></mat-icon>
+      </ng-container>
+      {{ data.toDeleteName }}
+    </p>
+  </div>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-evenly center">
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [mat-dialog-close]="true" cdkFocusInitial color="primary">Yes</button>
+</div>

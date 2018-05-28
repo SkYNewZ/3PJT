@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { SocialUser } from 'angularx-social-login';
+import { UserApp } from '../models/main-user';
+import { AuthService } from '../auth/auth.service';
+import { UserProfileService } from './user-profile.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Md5 } from 'ts-md5';
+import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -8,19 +14,53 @@ import { SocialUser } from 'angularx-social-login';
 })
 export class UserProfileComponent implements OnInit {
 
-  user: SocialUser;
+  public user: UserApp = null;
+  public form: FormGroup;
+  public showLoader: Boolean = true;
 
-  constructor() {
-    if (localStorage.getItem('loggedIn') === 'true') {
-      this.user = new SocialUser();
-      this.user.email = localStorage.getItem('user_email');
-      this.user.photoUrl = localStorage.getItem('user_avatar');
-      this.user.firstName = localStorage.getItem('user_firstname');
-      this.user.lastName = localStorage.getItem('user_lastname');
+  constructor(
+    private userService: UserProfileService,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private routeur: Router
+  ) { }
+
+  ngOnInit() {
+    this.userService.getUserInfo().subscribe((user: UserApp) => {
+      this.user = UserApp.FROM_JSON(user);
+      this.form = this.fb.group({
+        firstName: [this.user.firstname, Validators.required],
+        lastName: [this.user.lastname, Validators.required],
+        username: [this.user.username, Validators.required],
+        email: [this.user.email, Validators.compose([Validators.required, Validators.email])],
+        password: ['', Validators.compose([Validators.minLength(5), Validators.maxLength(40)])],
+        accountNonExpired: [true, Validators.required],
+        accountNonLocked: [true, Validators.required],
+        credentialsNonExpired: [true, Validators.required],
+        provider: ['supdrive', Validators.required],
+        enabled: [true, Validators.required]
+      });
+      this.showLoader = false;
+    });
+  }
+
+  onSubmit(): void {
+    if (this.form.valid) {
+      this.userService.updateUser(this.form.value).subscribe(d => {
+        this.openSnackBar('Success');
+        this.routeur.navigateByUrl('/');
+      }, (err) => {
+        console.log(err);
+      });
     }
   }
 
-  ngOnInit() {
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'Dismiss', {
+      duration: 10000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right'
+    });
   }
 
 }

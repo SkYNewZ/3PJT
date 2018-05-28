@@ -1,7 +1,4 @@
 export interface User {
-  userName: string;
+  usernameOrEmail: string;
   password: string;
-  photoUrl: string;
-  firstname: string;
-  lastname: string;
 }

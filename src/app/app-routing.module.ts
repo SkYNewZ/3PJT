@@ -1,27 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { UserProfileComponent } from './user-profile/user-profile.component';
 import { AppComponent } from './app.component';
 import { FileComponent } from './file/file.component';
 import { AuthGuard } from './auth/auth.guard';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'my-files', component: FileComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'files', component: FileComponent, canActivate: [AuthGuard] },
-  { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: '**', component: HomeComponent, canActivate: [AuthGuard] },
+  {
+    path: 'profile',
+    component: UserProfileComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard]
+  },
+  {
+    path: '',
+    redirectTo: '/my-files',
+    pathMatch: 'full'
+  },
+  { path: 'folder/:uuid', component: FileComponent, canActivate: [AuthGuard] },
+  {
+    path: '**',
+    redirectTo: '/my-files',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
-  exports: [ RouterModule ],
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(routes)
-  ],
+  exports: [RouterModule],
+  imports: [CommonModule, RouterModule.forRoot(routes)],
   declarations: []
 })
 export class AppRoutingModule { }

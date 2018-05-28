@@ -12,3 +12,9 @@
 #avatar-button {
   height: 50px;
 }
+
+mat-toolbar {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}

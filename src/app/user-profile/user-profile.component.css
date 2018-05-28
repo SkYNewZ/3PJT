@@ -1,0 +1,10 @@
+.full-width-input {
+  width: 100%;
+}
+
+img {
+  max-width: 75px;
+  position: absolute;
+  top: 40px;
+  right: 23px;
+}

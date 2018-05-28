@@ -1,34 +1,92 @@
 <div class="signin-content">
   <mat-card>
+    <mat-card-title>File Manager</mat-card-title>
+    <mat-card-subtitle>Please login to continue</mat-card-subtitle>
     <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-tab-group [(selectedIndex)]="selectedTab">
 
-        <mat-card-title>File Manager</mat-card-title>
+        <mat-tab label="Login">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Username or Email" formControlName="usernameOrEmail" required>
+              <mat-error *ngIf="isFieldInvalid('usernameOrEmail', form)">
+                Please inform your user name
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput type="password" placeholder="Password" formControlName="password" required>
+              <mat-error *ngIf="isFieldInvalid('password', form)">
+                Please inform your password
+              </mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" [disabled]="showLoader" type="submit" class="button-margin">
+              <div fxLayout="row" fxLayoutAlign="space-around center">
+                <span>{{ loginButtonText }}</span>
+                <mat-progress-spinner style="margin-left: 15px" *ngIf="showLoader" mode="indeterminate" diameter="20" color="warn"></mat-progress-spinner>
+              </div>
+            </button>
+          </form>
+        </mat-tab>
 
-        <mat-card-subtitle>Please login to continue</mat-card-subtitle>
-        <mat-form-field class="full-width-input">
-          <input matInput placeholder="User" formControlName="userName" required>
-          <mat-error *ngIf="isFieldInvalid('userName')">
-            Please inform your user name
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="full-width-input">
-          <input matInput type="password" placeholder="Password" formControlName="password" required>
-          <mat-error *ngIf="isFieldInvalid('userName')">
-            Please inform your password
-          </mat-error>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit">Login</button>
-      </form>
+        <mat-tab label="Register">
+          <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Username" formControlName="username" required>
+              <mat-error *ngIf="isFieldInvalid('username', registerForm)">
+                Please inform your user name
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Firstname" formControlName="firstName" required>
+              <mat-error *ngIf="isFieldInvalid('firstName', registerForm)">
+                Please inform your firstname
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Lastname" formControlName="lastName" required>
+              <mat-error *ngIf="isFieldInvalid('firstName', registerForm)">
+                Please inform your lastname
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput placeholder="Email" formControlName="email" required>
+              <mat-error *ngIf="isFieldInvalid('email', registerForm)">
+                Please inform your email
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="full-width-input">
+              <input matInput type="password" placeholder="Password" formControlName="password" required>
+              <mat-error *ngIf="isInvalidPassword()">
+                Password must contain at leat 6 characters and 20 characters
+              </mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" class="button-margin" [disabled]="showLoader">
+              <div fxLayout="row" fxLayoutAlign="space-around center">
+                <span>{{ registerButtonText }}</span>
+                <mat-progress-spinner style="margin-left: 15px" *ngIf="showLoader" mode="indeterminate" diameter="20" color="warn"></mat-progress-spinner>
+              </div>
+            </button>
+          </form>
+        </mat-tab>
+
+      </mat-tab-group>
     </mat-card-content>
-    
+
     <mat-card-content>
-      <mat-card-subtitle>Or connect with Social Media</mat-card-subtitle>
+      <mat-card-subtitle>Or connect with :</mat-card-subtitle>
       <div xLayout="row" fxLayoutAlign="space-evenly center">
-        <button mat-raised-button color="link">
-          <i class="fa fa-google-plus-official" style="color: #d62d20" aria-hidden="true"></i> Google+</button>
-        <button mat-raised-button color="link">
-          <i class="fa fa-facebook-official" style="color: #3b5998" aria-hidden="true"></i> Facebook</button>
+        <button mat-raised-button color="link" (click)="signInWithGoogle()">
+          <i class="fa fa-google-plus-official" style="color: #d62d20" aria-hidden="true"></i>
+          <span class="social-network">Google+</span>
+        </button>
+        <button mat-raised-button color="link" (click)="signInWithFB()">
+          <i class="fa fa-facebook-official" style="color: #3b5998" aria-hidden="true"></i>
+          <span class="social-network">Facebook</span>
+        </button>
+        <!-- <button mat-raised-button color="link">
+          <i class="fa fa-linkedin" style="color: #0376B4" aria-hidden="true"></i>
+          <span class="social-network">LinkedIn</span>
+        </button> -->
       </div>
     </mat-card-content>
   </mat-card>

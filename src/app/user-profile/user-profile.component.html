@@ -1,37 +1,55 @@
-<div class="container" *ngIf="user">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header card-header-danger">
-          <div fxLayout="row" fxLayoutAlign="space-between center">
-            <h4 class="card-title">{{user.firstName}} {{user.lastName}} - Edit Profile</h4>
-            <img class="img" [src]=user.photoUrl />
+<ng-container *ngIf="user">
+  <div class="container">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-card>
+        <mat-card-title>Edit your profile</mat-card-title>
+        <mat-card-subtitle>Quentin Lemaire
+          <img mat-card-image [src]="user.photoUrl">
+        </mat-card-subtitle>
+        <mat-card-content>
+          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+            <mat-form-field>
+              <input matInput placeholder="Firstname" formControlName="firstName" required>
+              <mat-error>
+                Please inform your first name
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Lastname" formControlName="lastName" required>
+              <mat-error>
+                Please inform your last name
+              </mat-error>
+            </mat-form-field>
           </div>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6">
-              <mat-form-field>
-                <input matInput placeholder="First name" [(ngModel)]="user.firstName" name="firstName" type="text">
-              </mat-form-field>
-            </div>
-            <div class="col-md-6">
-              <mat-form-field>
-                <input matInput placeholder="Last name" [(ngModel)]="user.lastName" name="lastName" type="text">
-              </mat-form-field>
-            </div>
+          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+            <mat-form-field>
+              <input matInput placeholder="Email" formControlName="email" required>
+              <mat-error>
+                Please inform a valid email adress
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Username" formControlName="username" required>
+              <mat-error>
+                Please inform your user name
+              </mat-error>
+            </mat-form-field>
           </div>
-          <div class="row">
-            <div class="col-md-12" fxLayout="row">
-              <mat-form-field fxFlex>
-                <input matInput placeholder="Email adress" [(ngModel)]="user.email" name="email" type="text">
-              </mat-form-field>
-            </div>
+          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+            <mat-form-field>
+              <input matInput type="password" placeholder="Password" formControlName="password">
+              <mat-error>
+                Password must contain at leat 5 characters and 40 characters
+              </mat-error>
+            </mat-form-field>
           </div>
-          <button mat-raised-button>Update Profile</button>
-          <div class="clearfix"></div>
-        </div>
-      </div>
-    </div>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary" type="submit" class="button-margin">Save</button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
   </div>
-</div>
+</ng-container>
+
+<mat-progress-spinner *ngIf="showLoader" mode="indeterminate" class="custom"></mat-progress-spinner>
