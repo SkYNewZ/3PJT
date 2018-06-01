@@ -41,6 +41,7 @@ Deploy to Gitlab Registry:
 Deploy to Rancher:
   stage: rancher_deploy
   script:
-    - docker run -it --rm -e RANCHER_URL=$RANCHER_URL -e RANCHER_ACCESS_KEY=$RANCHER_ACCESS_KEY -e RANCHER_SECRET_KEY=$RANCHER_SECRET_KEY cdrx/rancher-gitlab-deploy:latest upgrade --finish-upgrade --wait-for-upgrade-to-finish --stack SupDrive --service front --new-image registry.gitlab.com/skynewz/supdrive-front:$(git describe --tags --abbrev=0)
+    - apk update && apk add git
+    - docker run --rm -e RANCHER_URL=$RANCHER_URL -e RANCHER_ACCESS_KEY=$RANCHER_ACCESS_KEY -e RANCHER_SECRET_KEY=$RANCHER_SECRET_KEY cdrx/rancher-gitlab-deploy:latest upgrade --finish-upgrade --wait-for-upgrade-to-finish --stack SupDrive --service front --new-image registry.gitlab.com/skynewz/supdrive-front:$(git describe --tags --abbrev=0)
   only:
   - tags
