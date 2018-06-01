@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,7 @@ import { Component, HostListener } from '@angular/core';
 export class AppComponent {
   @HostListener('document:contextmenu', ['$event'])
   onDocumentRightClick(event) {
-    if (event instanceof MouseEvent) {
+    if (event instanceof MouseEvent && environment.production) {
       event.preventDefault();
     }
   }

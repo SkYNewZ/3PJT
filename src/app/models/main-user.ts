@@ -1,5 +1,6 @@
 import { plainToClass, classToPlain } from 'class-transformer';
 import { Md5 } from 'ts-md5';
+import { Offer } from './offer';
 
 export class UserApp {
     private _firstname: string;
@@ -10,6 +11,40 @@ export class UserApp {
     private _photoUrl: string;
     private _createdAt: Date;
     private _updatedAt: Date;
+
+    /**
+     * Getter offre
+     * @return {Offer}
+     */
+    public get offre(): Offer {
+        return this._offre;
+    }
+
+    /**
+     * Setter offre
+     * @param {Offer} value
+     */
+    public set offre(value: Offer) {
+        this._offre = value;
+    }
+    private _offre: Offer;
+
+    /**
+     * Getter currentDataSize
+     * @return {number}
+     */
+    public get currentDataSize(): number {
+        return this._currentDataSize;
+    }
+
+    /**
+     * Setter currentDataSize
+     * @param {number} value
+     */
+    public set currentDataSize(value: number) {
+        this._currentDataSize = value;
+    }
+    private _currentDataSize: number;
 
     public static FROM_JSON(jsonObject: {}): UserApp {
         return plainToClass(UserApp, jsonObject);

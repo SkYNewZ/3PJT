@@ -35,8 +35,7 @@ export class LoginComponent implements OnInit {
   public selectedTab = 0;
   public returnUrl: string;
   public showLoader: Boolean = false;
-  public loginButtonText: String = 'Sign in';
-  public registerButtonText: String = 'Register';
+  public submitButtonLabel: String = 'Submit';
 
   constructor(
     private fb: FormBuilder,
@@ -92,7 +91,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       this.showLoader = true;
-      this.loginButtonText = 'Logging in...';
+      this.submitButtonLabel = 'Logging in...';
       // get token and create BehaviorSubject
       this.authService.getToken(this.form.value).subscribe(
         (jwt: JwtApp) => {
@@ -108,7 +107,7 @@ export class LoginComponent implements OnInit {
         err => {
           console.log(err);
           this.showLoader = false;
-          this.loginButtonText = 'Sign in';
+          this.submitButtonLabel = 'Submit';
           if (err instanceof HttpErrorResponse && err.status === 401) {
             this.openSnackBar('Incorrect username or password');
             this.form.reset();
@@ -124,7 +123,7 @@ export class LoginComponent implements OnInit {
   onRegister(): void {
     if (this.registerForm.valid) {
       this.showLoader = true;
-      this.registerButtonText = 'Please wait...';
+      this.submitButtonLabel = 'Please wait...';
       this.authService.register(this.registerForm.value).subscribe(
         login => {
           this.selectedTab = 0;
@@ -134,11 +133,11 @@ export class LoginComponent implements OnInit {
           this.registerForm.reset();
           this.openSnackBar('Registration successfully');
           this.showLoader = false;
-          this.registerButtonText = 'Register';
+          this.submitButtonLabel = 'Submit';
         },
         (err: any) => {
           this.showLoader = false;
-          this.registerButtonText = 'Register';
+          this.submitButtonLabel = 'Submit';
           const e = plainToClass(LoginSuccess, err.error);
           if (e instanceof LoginSuccess) {
             this.registerForm.get('password').reset();
@@ -173,10 +172,12 @@ export class LoginComponent implements OnInit {
   }
 
   signInWithGoogle(): void {
+    this.showLoader = true;
     this.authService.signInWithGoogle(this.returnUrl);
   }
 
   signInWithFB(): void {
+    this.showLoader = true;
     this.authService.signInWithFB(this.returnUrl);
   }
 }

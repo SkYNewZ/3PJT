@@ -19,15 +19,16 @@ export class UserProfileComponent implements OnInit {
   public showLoader: Boolean = true;
 
   constructor(
-    private userService: UserProfileService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private routeur: Router
+    private routeur: Router,
+    private authService: AuthService,
+    private userService: UserProfileService
   ) { }
 
   ngOnInit() {
-    this.userService.getUserInfo().subscribe((user: UserApp) => {
-      this.user = UserApp.FROM_JSON(user);
+    this.authService.isLoggedIn.subscribe((user: UserApp) => {
+      this.user = user;
       this.form = this.fb.group({
         firstName: [this.user.firstname, Validators.required],
         lastName: [this.user.lastname, Validators.required],
@@ -61,6 +62,28 @@ export class UserProfileComponent implements OnInit {
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
+  }
+
+  manageOffer(event: MouseEvent): void {
+    event.preventDefault();
+    console.log('TODO, mange offer');
+  }
+
+  public get quota(): number {
+    const maxSizeAvailable: number = this.user.offre.maxSize;
+    const currentSizeUsed: number = this.user.currentDataSize;
+    const percentage: number = ((currentSizeUsed * maxSizeAvailable) / 100);
+    return Math.floor(percentage);
+  }
+
+  public get formatedFirstnameAndLastname(): string {
+    return (
+      this.user.firstname.charAt(0).toUpperCase() +
+      this.user.firstname.substr(1).toLowerCase() +
+      ' ' +
+      this.user.lastname.charAt(0).toUpperCase() +
+      this.user.lastname.substr(1).toLowerCase()
+    );
   }
 
 }

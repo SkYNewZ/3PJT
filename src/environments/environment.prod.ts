@@ -1,19 +1,19 @@
 export const environment = {
   production: true,
-  apiEndoint: 'https://supdrive.lemairepro.fr',
-  signupEndpoint: '/api/auth/signup',
-  signinEndpoint: '/api/auth/signin',
-  checkUsernameAvailabilityEndpoint: '/api/user/checkUsernameAvailability',
-  userInfoEndpoint: '/api/user/me',
-  uploadFileEndpoint: '/api/files/upload',
-  listFilesEndpoint: '/api/folder',
-  createFolderEndpoint: '/api/folder',
-  renameFolderEndpoint: '/api/folder',
-  deleteFolderEndpoint: '/api/folder',
-  renameFileEndpoint: '/api/files',
-  deleteFileEndpoint: '/api/files',
+  apiEndoint: 'https://supdrive.lemairepro.fr/api',
+  signupEndpoint: '/auth/signup',
+  signinEndpoint: '/auth/signin',
+  checkUsernameAvailabilityEndpoint: '/user/checkUsernameAvailability',
+  userInfoEndpoint: '/user/me',
+  uploadFileEndpoint: '/files/upload',
+  listFilesEndpoint: '/folder',
+  createFolderEndpoint: '/folder',
+  renameFolderEndpoint: '/folder',
+  deleteFolderEndpoint: '/folder',
+  renameFileEndpoint: '/files',
+  deleteFileEndpoint: '/files',
   downloadFileEndpoint: '/download/files',
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
-    return `${environment.apiEndoint}/api/auth/${provider}/signin`;
+    return `${environment.apiEndoint}/auth/${provider}/signin`;
   }
 };

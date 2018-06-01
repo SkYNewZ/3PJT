@@ -3,7 +3,7 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-card>
         <mat-card-title>Edit your profile</mat-card-title>
-        <mat-card-subtitle>Quentin Lemaire
+        <mat-card-subtitle>{{ formatedFirstnameAndLastname }}
           <img mat-card-image [src]="user.photoUrl">
         </mat-card-subtitle>
         <mat-card-content>
@@ -42,6 +42,11 @@
                 Password must contain at leat 5 characters and 40 characters
               </mat-error>
             </mat-form-field>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-around stretch">
+            <p>Quota : (You benefit from the
+              <a href="#" (click)="manageOffer($event)" title="Mange my offer">BASIC</a> offer)</p>
+            <mat-progress-bar mode="determinate" [value]="quota"></mat-progress-bar>
           </div>
         </mat-card-content>
         <mat-card-actions align="end">

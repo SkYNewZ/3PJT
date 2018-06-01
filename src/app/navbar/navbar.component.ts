@@ -31,7 +31,7 @@ export class NavbarComponent implements OnInit {
     this.authService.logout();
   }
 
-  getFormatedFirstnameAndLastname(): string {
+  public get formatedFirstnameAndLastname(): string {
     return (
       this.user.firstname.charAt(0).toUpperCase() +
       this.user.firstname.substr(1).toLowerCase() +
