@@ -3,13 +3,15 @@ import {
   HttpClient,
   HttpRequest,
   HttpEventType,
-  HttpResponse
+  HttpResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SharedService } from '../shared.service';
 import { File as ApiFile } from '../file/file';
+import { ApiError } from '../models/api-error';
 
 @Injectable()
 export class UploadService {
@@ -61,6 +63,13 @@ export class UploadService {
           // Close the progress-stream if we get an answer form the API
           // The upload is complete
           progress.complete();
+        }
+      }, (err: any) => {
+        if (err instanceof HttpErrorResponse) {
+          const apiError: ApiError = ApiError.FROM_JSON(err.error);
+          console.error(`Error during upload file in upload.service.ts - ${apiError.status} - ${apiError.message}`);
+        } else {
+          console.error(err);
         }
       });
 

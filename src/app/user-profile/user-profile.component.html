@@ -4,7 +4,9 @@
       <mat-card>
         <mat-card-title>Edit your profile</mat-card-title>
         <mat-card-subtitle>{{ formatedFirstnameAndLastname }}
-          <img mat-card-image [src]="user.photoUrl">
+          <a href="https://fr.gravatar.com/" target="_blank" title="Gravatar picture">
+            <img mat-card-image [src]="user.photoUrl">
+          </a>
         </mat-card-subtitle>
         <mat-card-content>
           <div fxLayout="row" fxLayoutAlign="space-evenly none">
@@ -43,9 +45,9 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div fxLayout="column" fxLayoutAlign="space-around stretch">
-            <p>Quota : (You benefit from the
-              <a href="#" (click)="manageOffer($event)" title="Mange my offer">BASIC</a> offer)</p>
+          <div fxLayout="column" fxLayoutAlign="space-around stretch" class="mat-elevation-z8" id="quota">
+            <p>Quota (You benefit from the
+              <a href="#" (click)="manageOffer($event)" title="Mange my offer">BASIC</a> offer) : {{ formatedQuota }}</p>
             <mat-progress-bar mode="determinate" [value]="quota"></mat-progress-bar>
           </div>
         </mat-card-content>

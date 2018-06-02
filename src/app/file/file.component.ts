@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FileService } from './file.service';
 import { File as ApiFile } from './file';
-import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatSort, MatDialog, MatSnackBar } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiListElement } from './list-element';
 import { Folder } from './folder';
@@ -14,6 +14,8 @@ import { UploadEvent, FileSystemFileEntry, FileSystemDirectoryEntry, UploadFile 
 import { UploadService } from '../upload/upload.service';
 import 'rxjs/operator/map';
 import { ISubscription } from 'rxjs/Subscription';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ApiError } from '../models/api-error';
 
 @Component({
   selector: 'app-file',
@@ -47,7 +49,8 @@ export class FileComponent implements OnInit, OnDestroy {
     private router: Router,
     private ss: SharedService,
     private dialog: MatDialog,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -263,9 +266,27 @@ export class FileComponent implements OnInit, OnDestroy {
             this.dataSource.data.push(d);
             this.dataSource = new MatTableDataSource(this.dataSource.data);
             this.orderDatasource();
+          }, (err: any) => {
+            if (err instanceof HttpErrorResponse) {
+              const apiError: ApiError = ApiError.FROM_JSON(err.error);
+              console.error(`Error during upload on drag & drop - ${apiError.status} - ${apiError.message}`);
+              if (apiError.message.includes('upload size exceeded')) {
+                this.openSnackBar('File too big to upload');
+              }
+            } else {
+              console.error(err);
+            }
           });
         });
       }
     }
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'Dismiss', {
+      duration: 10000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right'
+    });
   }
 }

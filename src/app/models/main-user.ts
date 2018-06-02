@@ -191,4 +191,20 @@ export class UserApp {
     public set provider(value: string) {
         this._provider = value;
     }
+
+    /**
+     * Get max size for current offer in MB (MO in french)
+     * @returns {number}
+     */
+    public get currentDataSizeInMB(): number {
+        return this._currentDataSize / 1048576;
+    }
+
+    /**
+     * Get max size for current offer in GB (GO in french)
+     * @returns {number}
+     */
+    public get currentDataSizeInGB(): number {
+        return this._currentDataSize / 1073741824;
+    }
 }

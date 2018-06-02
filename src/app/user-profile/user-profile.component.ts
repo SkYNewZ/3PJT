@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+import { Offer } from '../models/offer';
 
 @Component({
   selector: 'app-user-profile',
@@ -72,8 +73,13 @@ export class UserProfileComponent implements OnInit {
   public get quota(): number {
     const maxSizeAvailable: number = this.user.offre.maxSize;
     const currentSizeUsed: number = this.user.currentDataSize;
-    const percentage: number = ((currentSizeUsed * maxSizeAvailable) / 100);
-    return Math.floor(percentage);
+    const percentage: number = ((currentSizeUsed * 100) / maxSizeAvailable);
+    return Math.round(percentage);
+  }
+
+  public get formatedQuota(): string {
+    const offer: Offer = Offer.FROM_JSON(this.user.offre);
+    return `${this.quota}% - ${this.user.currentDataSizeInGB.toFixed(2)}GB/${offer.maxSizeInGB.toFixed(2)}GB`;
   }
 
   public get formatedFirstnameAndLastname(): string {

@@ -8,3 +8,9 @@ img {
   top: 40px;
   right: 40px;
 }
+
+#quota {
+  margin-top: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
+}

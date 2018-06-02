@@ -62,4 +62,20 @@ export class Offer {
         this._maxSize = value;
     }
 
+    /**
+     * Get max size for current offer in MB (MO in french)
+     * @returns {number}
+     */
+    public get maxSizeInMB(): number {
+        return this._maxSize / 1048576;
+    }
+
+    /**
+     * Get max size for current offer in GB (GO in french)
+     * @returns {number}
+     */
+    public get maxSizeInGB(): number {
+        return this._maxSize / 1073741824;
+    }
+
 }
