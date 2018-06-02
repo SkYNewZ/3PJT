@@ -64,4 +64,8 @@ export class FileService {
       return new Blob([blob], { type: entity.mimeType });
     });
   }
+
+  search(query: string): Observable<(File | Folder)[]> {
+    return this.http.get<any>(environment.getSearchUrl(query));
+  }
 }

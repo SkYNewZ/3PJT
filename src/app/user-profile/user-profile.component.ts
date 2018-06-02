@@ -18,6 +18,7 @@ export class UserProfileComponent implements OnInit {
   public user: UserApp = null;
   public form: FormGroup;
   public showLoader: Boolean = true;
+  private formSubmitAttempt: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -31,26 +32,25 @@ export class UserProfileComponent implements OnInit {
     this.authService.isLoggedIn.subscribe((user: UserApp) => {
       this.user = user;
       this.form = this.fb.group({
-        firstName: [this.user.firstname, Validators.required],
-        lastName: [this.user.lastname, Validators.required],
-        username: [this.user.username, Validators.required],
+        firstname: [this.user.firstname, Validators.required],
+        lastname: [this.user.lastname, Validators.required],
+        // username: [this.user.username, Validators.required],
         email: [this.user.email, Validators.compose([Validators.required, Validators.email])],
-        password: ['', Validators.compose([Validators.minLength(5), Validators.maxLength(40)])],
-        accountNonExpired: [true, Validators.required],
-        accountNonLocked: [true, Validators.required],
-        credentialsNonExpired: [true, Validators.required],
-        provider: ['supdrive', Validators.required],
-        enabled: [true, Validators.required]
+        password: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(40)])],
       });
       this.showLoader = false;
     });
   }
 
   onSubmit(): void {
+    this.formSubmitAttempt = true;
     if (this.form.valid) {
-      this.userService.updateUser(this.form.value).subscribe(d => {
+      this.userService.updateUser(this.form.value).subscribe((user: UserApp) => {
+        const newUser: UserApp = UserApp.FROM_JSON(user);
+        this.authService.login(newUser);
         this.openSnackBar('Success');
-        this.routeur.navigateByUrl('/');
+        this.form.get('password').reset();
+        this.formSubmitAttempt = false;
       }, (err) => {
         console.log(err);
       });
@@ -89,6 +89,13 @@ export class UserProfileComponent implements OnInit {
       ' ' +
       this.user.lastname.charAt(0).toUpperCase() +
       this.user.lastname.substr(1).toLowerCase()
+    );
+  }
+
+  isFieldInvalid(field: string): boolean {
+    return (
+      (!this.form.get(field).valid && this.form.get(field).touched) ||
+      (this.form.get(field).untouched && this.formSubmitAttempt)
     );
   }
 

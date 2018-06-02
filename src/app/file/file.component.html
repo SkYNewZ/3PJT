@@ -12,9 +12,9 @@
   </div>
   <mat-card-content *ngIf="dataSource">
     <mat-form-field>
-      <mat-label>Search</mat-label>
+      <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event.target.value)">
-      <mat-icon matSuffix>search</mat-icon>
+      <mat-icon matSuffix>filter_list</mat-icon>
     </mat-form-field>
     <button mat-icon-button title="Go back" (click)="backClicked()">
       <mat-icon>arrow_upward</mat-icon>

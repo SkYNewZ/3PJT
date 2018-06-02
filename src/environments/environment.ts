@@ -42,9 +42,15 @@ export const environment = {
   // download file (/<UUID> mandatory)
   downloadFileEndpoint: '/download/files',
 
+  searchEndpoint: '/search',
+
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
     return `${environment.apiEndoint}/auth/${provider}/signin`;
-  }
+  },
+
+  getSearchUrl(query: string): string {
+    return `${environment.apiEndoint + environment.searchEndpoint}?q=${encodeURI(query)}`;
+  },
 };
 
 /*

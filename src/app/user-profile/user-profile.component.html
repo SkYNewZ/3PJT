@@ -3,44 +3,40 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-card>
         <mat-card-title>Edit your profile</mat-card-title>
-        <mat-card-subtitle>{{ formatedFirstnameAndLastname }}
+        <mat-card-subtitle>{{ formatedFirstnameAndLastname }} - {{ user.username}}
           <a href="https://fr.gravatar.com/" target="_blank" title="Gravatar picture">
             <img mat-card-image [src]="user.photoUrl">
           </a>
         </mat-card-subtitle>
         <mat-card-content>
-          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+          <div fxLayout="column" fxLayoutAlign="space-around center">
             <mat-form-field>
-              <input matInput placeholder="Firstname" formControlName="firstName" required>
-              <mat-error>
+              <input matInput placeholder="Firstname" formControlName="firstname" required>
+              <mat-error *ngIf="isFieldInvalid('firstname')">
                 Please inform your first name
               </mat-error>
             </mat-form-field>
             <mat-form-field>
-              <input matInput placeholder="Lastname" formControlName="lastName" required>
-              <mat-error>
+              <input matInput placeholder="Lastname" formControlName="lastname" required>
+              <mat-error *ngIf="isFieldInvalid('lastname')">
                 Please inform your last name
               </mat-error>
             </mat-form-field>
-          </div>
-          <div fxLayout="row" fxLayoutAlign="space-evenly none">
             <mat-form-field>
               <input matInput placeholder="Email" formControlName="email" required>
-              <mat-error>
+              <mat-error *ngIf="isFieldInvalid('email')">
                 Please inform a valid email adress
               </mat-error>
             </mat-form-field>
-            <mat-form-field>
+            <!-- <mat-form-field>
               <input matInput placeholder="Username" formControlName="username" required>
-              <mat-error>
+              <mat-error *ngIf="isFieldInvalid('username')">
                 Please inform your user name
               </mat-error>
-            </mat-form-field>
-          </div>
-          <div fxLayout="row" fxLayoutAlign="space-evenly none">
+            </mat-form-field> -->
             <mat-form-field>
-              <input matInput type="password" placeholder="Password" formControlName="password">
-              <mat-error>
+              <input matInput type="password" placeholder="Password" formControlName="password" autocomplete="off" required>
+              <mat-error *ngIf="isFieldInvalid('password')">
                 Password must contain at leat 5 characters and 40 characters
               </mat-error>
             </mat-form-field>

@@ -13,7 +13,11 @@ export const environment = {
   renameFileEndpoint: '/files',
   deleteFileEndpoint: '/files',
   downloadFileEndpoint: '/download/files',
+  searchEndpoint: '/search',
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
     return `${environment.apiEndoint}/auth/${provider}/signin`;
-  }
+  },
+  getSearchUrl(query: string): string {
+    return `${environment.apiEndoint}/${environment.searchEndpoint}?q=${encodeURI(query)}`;
+  },
 };
