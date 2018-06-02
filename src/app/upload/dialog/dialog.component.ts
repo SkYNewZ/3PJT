@@ -3,6 +3,8 @@ import { MatDialogRef } from '@angular/material';
 import { UploadService } from '../upload.service';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ApiError } from '../../models/api-error';
 
 @Component({
   selector: 'app-dialog',
@@ -23,7 +25,7 @@ export class DialogComponent {
     public dialogRef: MatDialogRef<DialogComponent>,
     public uploadService: UploadService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   addFiles() {
     this.file.nativeElement.click();

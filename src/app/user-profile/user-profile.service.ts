@@ -18,6 +18,6 @@ export class UserProfileService {
   }
 
   updateUser(user: UserApp): Observable<UserApp> {
-    return this.http.post<UserApp>(environment.apiEndoint + environment.userInfoEndpoint, user);
+    return this.http.put<UserApp>(environment.apiEndoint + environment.userInfoEndpoint, user);
   }
 }

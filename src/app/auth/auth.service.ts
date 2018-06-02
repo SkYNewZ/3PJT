@@ -94,7 +94,6 @@ export class AuthService {
             this.user.next(user);
             this.location.replaceState('/');
             this.router.navigateByUrl(returnUrl);
-            console.log(user);
           });
       });
   }
@@ -123,7 +122,6 @@ export class AuthService {
             this.user.next(user);
             this.location.replaceState('/');
             this.router.navigateByUrl(returnUrl);
-            console.log(user);
           });
       });
   }

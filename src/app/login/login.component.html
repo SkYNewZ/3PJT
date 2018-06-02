@@ -5,7 +5,7 @@
     <mat-card-content>
       <mat-tab-group [(selectedIndex)]="selectedTab">
 
-        <mat-tab label="Login">
+        <mat-tab label="Sign in">
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <mat-form-field class="full-width-input">
               <input matInput placeholder="Username or Email" formControlName="usernameOrEmail" required>
@@ -21,14 +21,14 @@
             </mat-form-field>
             <button mat-raised-button color="primary" [disabled]="showLoader" type="submit" class="button-margin">
               <div fxLayout="row" fxLayoutAlign="space-around center">
-                <span>{{ loginButtonText }}</span>
+                <span>{{ submitButtonLabel }}</span>
                 <mat-progress-spinner style="margin-left: 15px" *ngIf="showLoader" mode="indeterminate" diameter="20" color="warn"></mat-progress-spinner>
               </div>
             </button>
           </form>
         </mat-tab>
 
-        <mat-tab label="Register">
+        <mat-tab label="Sign up">
           <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
             <mat-form-field class="full-width-input">
               <input matInput placeholder="Username" formControlName="username" required>
@@ -62,7 +62,7 @@
             </mat-form-field>
             <button mat-raised-button color="primary" type="submit" class="button-margin" [disabled]="showLoader">
               <div fxLayout="row" fxLayoutAlign="space-around center">
-                <span>{{ registerButtonText }}</span>
+                <span>{{ submitButtonLabel }}</span>
                 <mat-progress-spinner style="margin-left: 15px" *ngIf="showLoader" mode="indeterminate" diameter="20" color="warn"></mat-progress-spinner>
               </div>
             </button>

@@ -3,8 +3,18 @@
 }
 
 img {
-  max-width: 75px;
+  max-width: 60px;
   position: absolute;
   top: 40px;
-  right: 23px;
+  right: 40px;
+}
+
+#quota {
+  margin-top: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+mat-form-field {
+  width: 300px
 }
