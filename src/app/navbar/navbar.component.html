@@ -36,3 +36,15 @@
   </mat-toolbar>
   <mat-progress-bar mode="indeterminate" color="warn" *ngIf="searching"></mat-progress-bar>
 </ng-container>
+
+<ng-container *ngIf="!isLoggedIn">
+  <mat-toolbar color="primary">
+    <button mat-button routerLink="/">
+      <mat-icon>home</mat-icon>
+      File Manager</button>
+    <!-- This fills the remaining space of the current row -->
+    <span class="fill-remaining-space"></span>
+    <button mat-button routerLink="/">Login</button>
+  </mat-toolbar>
+  <mat-progress-bar mode="indeterminate" color="warn" *ngIf="searching"></mat-progress-bar>
+</ng-container>
