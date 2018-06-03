@@ -37,7 +37,7 @@ mat-progress-bar {
 }
 
 ::ng-deep .drop-zone {
-  border: none !important;
+  border: 1px dashed gray !important;
   border-radius: 0 !important;
   width: 100%
 }
