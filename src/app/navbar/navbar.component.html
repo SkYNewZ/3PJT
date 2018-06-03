@@ -5,6 +5,7 @@
       <mat-icon>home</mat-icon>
       File Manager</button>
     <button mat-button routerLink="/">My files</button>
+    <button mat-button routerLink="/public">Shared files</button>
     <form [formGroup]="searchControl" id="search-box" (ngSubmit)="submitSearch()" *ngIf="isItDeployedInProduction" (input)="onType($event.target.value)">
       <mat-form-field>
         <input matInput type="search" placeholder="Search" autocomplete="off" formControlName="input" [matAutocomplete]="auto">
