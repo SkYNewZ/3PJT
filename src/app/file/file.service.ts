@@ -73,6 +73,14 @@ export class FileService {
     });
   }
 
+  downloadSharedFile(entity: File): Observable<Blob> {
+    return this.http.get(`${environment.apiEndoint + environment.downloadSharedFileEndpoint}/${entity.uuid}`, {
+      responseType: 'blob'
+    }).map((blob: Blob) => {
+      return new Blob([blob], { type: entity.mimeType });
+    });
+  }
+
   search(query: string): Observable<(File | Folder)[]> {
     return this.http.get<any>(environment.getSearchUrl(query));
   }

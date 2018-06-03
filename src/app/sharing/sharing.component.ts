@@ -106,12 +106,16 @@ export class SharingComponent implements OnInit, OnDestroy {
   downloadFile(file: ApiFile): void {
     if (file.mimeType !== 'inode/directory') {
       this.showProgressBar = true;
-      this.fileService.downloadFile(file).subscribe((blob: Blob) => {
+      this.fileService.downloadSharedFile(file).subscribe((blob: Blob) => {
         this.showProgressBar = false;
         const link: HTMLAnchorElement = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
         link.download = file.name + file.extention;
         link.click();
+      }, (err) => {
+        this.openSnackBar('Unexpected error, please try again later');
+        console.log(err);
+        this.showProgressBar = false;
       });
     }
   }
