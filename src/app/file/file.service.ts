@@ -23,6 +23,14 @@ export class FileService {
     }
   }
 
+  getSharedFilesAndFolders(uuid?: string): Observable<ApiListElement> {
+    if (!uuid) {
+      return this.http.get<ApiListElement>(environment.apiEndoint + environment.getSharedEntitiesEndpoint);
+    } else {
+      return this.http.get<ApiListElement>(`${environment.apiEndoint + environment.getFilesAndFolderInSharedFolderEndpoint}/${uuid}`);
+    }
+  }
+
   createFolder(
     folderNameToCreate: string,
     parentUuid?: string

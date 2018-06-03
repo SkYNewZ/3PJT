@@ -6,6 +6,7 @@ import { FileComponent } from './file/file.component';
 import { AuthGuard } from './auth/auth.guard';
 import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { SharingComponent } from './sharing/sharing.component';
 
 const routes: Routes = [
   { path: 'my-files', component: FileComponent, canActivate: [AuthGuard] },
@@ -16,6 +17,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard]
   },
+  { path: 'public', component: SharingComponent },
+  { path: 'public/folder/:uuid', component: SharingComponent },
   {
     path: '',
     redirectTo: '/my-files',
@@ -26,12 +29,6 @@ const routes: Routes = [
     path: '**',
     redirectTo: '/my-files',
     pathMatch: 'full'
-  },
-  {
-    path: 'public', children: [
-      { path: 'folder/:uuid', pathMatch: 'full', component: FileComponent },
-      { path: 'file/:uuid', pathMatch: 'full', component: FileComponent }
-    ]
   }
 ];
 

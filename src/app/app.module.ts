@@ -19,6 +19,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UploadModule } from './upload/upload.module';
 import { InputDialogComponent } from './file/input-dialog/input-dialog.component';
 import { ConfirmationDialogComponent } from './file/confirmation-dialog/confirmation-dialog.component';
+import { SharingComponent } from './sharing/sharing.component';
 
 export function provideConfig() {
   return new AuthServiceConfig([
@@ -45,7 +46,8 @@ export function tokenGetter() {
     FileComponent,
     UserProfileComponent,
     InputDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    SharingComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +62,12 @@ export function tokenGetter() {
       config: {
         tokenGetter: tokenGetter,
         whitelistedDomains: ['localhost:8080', 'supdrive.lemairepro.fr'],
-        blacklistedRoutes: ['localhost:8080/api/auth']
+        blacklistedRoutes: [
+          'localhost:8080/api/auth',
+          'supdrive.lemairepro.fr/api/auth',
+          'localhost:8080/api/share',
+          'supdrive.lemairepro.fr/api/share'
+        ]
       }
     }),
     UploadModule,

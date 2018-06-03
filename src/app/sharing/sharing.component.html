@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+<mat-card>
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <div>
+      <mat-card-title>Public files</mat-card-title>
+      <mat-card-subtitle>All the files shared by all users</mat-card-subtitle>
+    </div>
+  </div>
+  <mat-card-content *ngIf="dataSource">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event.target.value)">
+      <mat-icon matSuffix>filter_list</mat-icon>
+    </mat-form-field>
+    <button mat-icon-button title="Go back" (click)="backClicked()">
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+    <div class="mat-elevation-z8" fxLayout="column">
+      <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let file" (contextmenu)="menuTrigger.openMenu()">
+            <span #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"></span>
+            <ng-container *ngIf="file.mimeType !== 'inode/directory'">
+              <mat-icon class="mat-icon-margin" [svgIcon]="getRightIcon(file.mimeType)" [ngClass]="{'file-blue-icon': getRightIcon(file.mimeType) === 'file_copy'}"></mat-icon>
+              <mat-icon *ngIf="file.shared">share</mat-icon>
+            </ng-container>
+            <ng-container *ngIf="file.mimeType === 'inode/directory' && !file.shared">
+              <mat-icon style="color: gray" class="mat-icon-margin">folder</mat-icon>
+            </ng-container>
+            <ng-container *ngIf="file.mimeType === 'inode/directory' && file.shared">
+              <mat-icon style="color: gray" class="mat-icon-margin">folder_shared</mat-icon>
+            </ng-container>
+            {{file.name}}
+            <mat-menu #menu="matMenu" yPosition="below" [overlapTrigger]="false">
+              <button mat-menu-item *ngIf="displayExtraVideoOrPhotoOption(file)" title="View" (click)="streamFileOrVideo(file)">
+                <mat-icon>open_in_new</mat-icon> Open</button>
+              <button mat-menu-item title="Download this file" (click)="downloadFile(file)">
+                <mat-icon>save</mat-icon> Download</button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef> Created </th>
+          <td mat-cell *matCellDef="let file"> {{file.createdAt | date : 'short'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedAt">
+          <th mat-header-cell *matHeaderCellDef> Last modified </th>
+          <td mat-cell *matCellDef="let file"> {{file.updatedAt | date : 'short'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'selected': selection.isSelected(row)}" (click)="selection.select(row)"
+          (dblclick)="navigate(row)"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-progress-bar mode="indeterminate" *ngIf="showProgressBar"></mat-progress-bar>
+<mat-progress-spinner *ngIf="showLoader" mode="indeterminate" class="custom"></mat-progress-spinner>

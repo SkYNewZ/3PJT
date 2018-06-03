@@ -16,6 +16,8 @@ export const environment = {
   searchEndpoint: '/search',
   shareFileEndpoint: '/files/share',
   shareFolderEndpoint: '/folder/share',
+  sharedEntities: '/share/all',
+  getFilesAndFolderInSharedFolderEndpoint: '/share/folder/content',
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
     return `${environment.apiEndoint}/auth/${provider}/signin`;
   },
