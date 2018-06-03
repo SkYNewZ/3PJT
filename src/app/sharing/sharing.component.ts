@@ -25,7 +25,8 @@ export class SharingComponent implements OnInit, OnDestroy {
   public displayedColumns: String[] = [
     'name',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
+    'createdBy'
   ];
   public selection: SelectionModel<ApiFile> = new SelectionModel<ApiFile>(
     false,
