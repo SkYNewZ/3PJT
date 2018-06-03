@@ -25,9 +25,9 @@ export class FileService {
 
   getSharedFilesAndFolders(uuid?: string): Observable<ApiListElement> {
     if (!uuid) {
-      return this.http.get<ApiListElement>(environment.apiEndoint + environment.getSharedEntitiesEndpoint);
+      return this.http.get<ApiListElement>(environment.apiEndoint + environment.listSharedEntitiesEndpoint);
     } else {
-      return this.http.get<ApiListElement>(`${environment.apiEndoint + environment.getFilesAndFolderInSharedFolderEndpoint}/${uuid}`);
+      return this.http.get<ApiListElement>(`${environment.apiEndoint + environment.listFilesAndFolderInSharedFolderEndpoint}/${uuid}`);
     }
   }
 
