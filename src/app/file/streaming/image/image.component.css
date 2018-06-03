@@ -1,0 +1,12 @@
+img {
+    border-radius: 0%;
+    max-width: 1000px;
+}
+
+.actions {
+    justify-content: flex-end;
+}
+
+video {
+    max-width: 1000px;
+}

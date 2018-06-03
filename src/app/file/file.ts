@@ -7,6 +7,59 @@ export class File {
   private _mimeType: string;
   private _createdAt: string;
   private _updatedAt: string;
+  private _shared: boolean;
+  private _createdBy: string;
+  private _updatedBy: string;
+
+
+  /**
+   * Getter createdBy
+   * @return {string}
+   */
+  public get createdBy(): string {
+    return this._createdBy;
+  }
+
+  /**
+   * Setter createdBy
+   * @param {string} value
+   */
+  public set createdBy(value: string) {
+    this._createdBy = value;
+  }
+
+  /**
+   * Getter updatedBy
+   * @return {string}
+   */
+  public get updatedBy(): string {
+    return this._updatedBy;
+  }
+
+  /**
+   * Setter updatedBy
+   * @param {string} value
+   */
+  public set updatedBy(value: string) {
+    this._updatedBy = value;
+  }
+
+
+  /**
+   * Getter shared
+   * @return {boolean}
+   */
+  public get shared(): boolean {
+    return this._shared;
+  }
+
+  /**
+   * Setter shared
+   * @param {boolean} value
+   */
+  public set shared(value: boolean) {
+    this._shared = value;
+  }
 
   public static FROM_JSON(jsonObject: {}): File {
     return plainToClass(File, jsonObject);

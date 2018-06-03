@@ -5,6 +5,7 @@
       <mat-icon>home</mat-icon>
       File Manager</button>
     <button mat-button routerLink="/">My files</button>
+    <button mat-button routerLink="/public">Shared files</button>
     <form [formGroup]="searchControl" id="search-box" (ngSubmit)="submitSearch()" *ngIf="isItDeployedInProduction" (input)="onType($event.target.value)">
       <mat-form-field>
         <input matInput type="search" placeholder="Search" autocomplete="off" formControlName="input" [matAutocomplete]="auto">
@@ -33,6 +34,18 @@
         <button mat-button (click)="onLogout()">Logout</button>
       </mat-menu>
     </div>
+  </mat-toolbar>
+  <mat-progress-bar mode="indeterminate" color="warn" *ngIf="searching"></mat-progress-bar>
+</ng-container>
+
+<ng-container *ngIf="!isLoggedIn">
+  <mat-toolbar color="primary">
+    <button mat-button routerLink="/">
+      <mat-icon>home</mat-icon>
+      File Manager</button>
+    <!-- This fills the remaining space of the current row -->
+    <span class="fill-remaining-space"></span>
+    <button mat-button routerLink="/">Login</button>
   </mat-toolbar>
   <mat-progress-bar mode="indeterminate" color="warn" *ngIf="searching"></mat-progress-bar>
 </ng-container>

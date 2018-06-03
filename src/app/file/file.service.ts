@@ -23,6 +23,14 @@ export class FileService {
     }
   }
 
+  getSharedFilesAndFolders(uuid?: string): Observable<ApiListElement> {
+    if (!uuid) {
+      return this.http.get<ApiListElement>(environment.apiEndoint + environment.getSharedEntitiesEndpoint);
+    } else {
+      return this.http.get<ApiListElement>(`${environment.apiEndoint + environment.getFilesAndFolderInSharedFolderEndpoint}/${uuid}`);
+    }
+  }
+
   createFolder(
     folderNameToCreate: string,
     parentUuid?: string
@@ -65,7 +73,42 @@ export class FileService {
     });
   }
 
+  downloadSharedFile(entity: File): Observable<Blob> {
+    return this.http.get(`${environment.apiEndoint + environment.downloadSharedFileEndpoint}/${entity.uuid}`, {
+      responseType: 'blob'
+    }).map((blob: Blob) => {
+      return new Blob([blob], { type: entity.mimeType });
+    });
+  }
+
   search(query: string): Observable<(File | Folder)[]> {
     return this.http.get<any>(environment.getSearchUrl(query));
+  }
+
+  shareOrUnshareEntity(entity: File | Folder): Observable<(File | Folder)> {
+    const body: { shared: boolean } = {
+      shared: !entity.shared
+    };
+    if (entity.mimeType === 'inode/directory') {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.shareFolderEndpoint}/${entity.uuid}`, body);
+    } else {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.shareFileEndpoint}/${entity.uuid}`, body);
+    }
+  }
+
+  streamImage(entity: File): Observable<Blob> {
+    if (entity.mimeType.includes('video') || entity.mimeType.includes('image')) {
+      return this.http.get(`${environment.apiEndoint + environment.downloadFileEndpoint}/${entity.uuid}`, {
+        responseType: 'blob'
+      });
+    }
+  }
+
+  streamSharedImage(entity: File): Observable<Blob> {
+    if (entity.mimeType.includes('video') || entity.mimeType.includes('image')) {
+      return this.http.get(`${environment.apiEndoint + environment.downloadSharedFileEndpoint}/${entity.uuid}`, {
+        responseType: 'blob'
+      });
+    }
   }
 }

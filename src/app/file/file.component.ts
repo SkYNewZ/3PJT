@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Inject } from '@angular/core';
 import { FileService } from './file.service';
 import { File as ApiFile } from './file';
 import { MatTableDataSource, MatSort, MatDialog, MatSnackBar } from '@angular/material';
@@ -16,6 +16,8 @@ import 'rxjs/operator/map';
 import { ISubscription } from 'rxjs/Subscription';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '../models/api-error';
+import { DOCUMENT, DomSanitizer } from '@angular/platform-browser';
+import { ImageComponent } from './streaming/image/image.component';
 
 @Component({
   selector: 'app-file',
@@ -30,10 +32,9 @@ export class FileComponent implements OnInit, OnDestroy {
   public displayedColumns: String[] = [
     'name',
     'createdAt',
-    'updatedAt'
+    'updatedAt',
+    'createdBy'
   ];
-  public initialSelection = [];
-  public allowMultiSelect = true;
   public selection: SelectionModel<ApiFile> = new SelectionModel<ApiFile>(
     false,
     null
@@ -50,7 +51,8 @@ export class FileComponent implements OnInit, OnDestroy {
     private ss: SharedService,
     private dialog: MatDialog,
     private uploadService: UploadService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -70,6 +72,10 @@ export class FileComponent implements OnInit, OnDestroy {
     this.uuidSub.unsubscribe();
   }
 
+  /**
+   * Main function to get files from api and display it
+   * @param parentFolderUuid
+   */
   getFiles(parentFolderUuid?: string): void {
     this.fileService
       .getFiles(parentFolderUuid)
@@ -106,12 +112,19 @@ export class FileComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Filter function for the mat data table
+   */
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.dataSource.filter = filterValue;
   }
 
+  /**
+   * Delete a file or folder
+   * @param entity
+   */
   deleteEntity(entity: ApiFile | Folder) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
@@ -131,6 +144,10 @@ export class FileComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Download a file
+   * @param file
+   */
   downloadFile(file: ApiFile): void {
     if (file.mimeType !== 'inode/directory') {
       this.showProgressBar = true;
@@ -144,6 +161,10 @@ export class FileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Rename a file or folder
+   * @param entity
+   */
   renameEntity(entity: ApiFile | Folder) {
     const dialogRef = this.dialog.open(InputDialogComponent, {
       width: '250px',
@@ -156,14 +177,18 @@ export class FileComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(name => {
       if (name) {
-        this.fileService.renameFile(entity, name).subscribe((renamedFile: ApiFile) => {
-          entity.name = renamedFile.name;
-          entity.updatedAt = new Date().toISOString();
+        this.fileService.renameFile(entity, name).subscribe((renamedEntity: ApiFile) => {
+          entity.name = renamedEntity.name;
+          entity.updatedAt = renamedEntity.updatedAt;
         });
       }
     });
   }
 
+  /**
+   * Send the right svg icon depend of the mimeType of the entity
+   * @param mimetype
+   */
   getRightIcon(mimetype: string): string {
     if (mimetype.includes('image')) {
       return 'drive_image';
@@ -184,6 +209,10 @@ export class FileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Sort the mat data table alphabetcally
+   * @param tab
+   */
   sortAlphabetically(tab: any[]): any[] {
     tab.sort(function (a, b) {
       if (a.name.toLowerCase() < b.name.toLowerCase()) {
@@ -197,19 +226,26 @@ export class FileComponent implements OnInit, OnDestroy {
     return tab;
   }
 
+  /**
+   * Return to previous view in the browser history
+   */
   backClicked(): void {
     this.location.back();
   }
 
+  /**
+   * Navigate to a folder
+   * @param row
+   */
   navigate(row: ApiFile | Folder): void {
     if (row.mimeType === 'inode/directory') {
       this.router.navigate(['/folder', row.uuid]);
-    } else if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
-      // todo
-      console.log('todo: view file on double click');
     }
   }
 
+  /**
+   * Create a folder
+   */
   openDialog(): void {
     const dialogRef = this.dialog.open(InputDialogComponent, {
       width: '250px',
@@ -233,6 +269,9 @@ export class FileComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Order the mat data table to display folder higher to files
+   */
   orderDatasource(): void {
     let files: any[] = [];
     let folders: any[] = [];
@@ -250,14 +289,55 @@ export class FileComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource(t.concat(folders).concat(files));
   }
 
-  shareFile(entity: ApiFile | Folder): void {
-    console.log('TODO: share');
+  /**
+   * Share or unshare a file or folder
+   * @param entity
+   */
+  toggleShare(entity: ApiFile | Folder): void {
+    this.fileService.shareOrUnshareEntity(entity).subscribe((newEntity: ApiFile | Folder) => {
+      entity.shared = newEntity.shared;
+
+      // create share link only if the user want to save
+      if (entity.shared) {
+        console.log(this.gethareLink(entity)); // TODO: copy to clipboard
+      }
+    });
   }
 
+  /**
+   * If the streaming button should be displayed
+   * @param file
+   */
   displayExtraVideoOrPhotoOption(file: ApiFile): boolean {
     return (file.mimeType.includes('video') || file.mimeType.includes('image')) ? true : false;
   }
 
+  /**
+   * Stream a file or a video
+   * @param row
+   */
+  streamFileOrVideo(row: ApiFile): void {
+    if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
+      this.fileService.streamImage(row).subscribe((blob: Blob) => {
+        const urlCreator = window.URL;
+        const dialogRef = this.dialog.open(ImageComponent, {
+          data: {
+            imageData: this.sanitizer.bypassSecurityTrustUrl(urlCreator.createObjectURL(blob)),
+            name: row.name + row.extention,
+            type: row.mimeType.includes('video') ? 'video' : 'image',
+            videoType: row.mimeType.includes('video') ? row.mimeType : null
+          }
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+  /**
+   * Upload file that is deposed in the droppable zone
+   * @param event
+   */
   dropped(event: UploadEvent): void {
     for (const droppedFile of event.files) {
       // Is it a file?
@@ -285,11 +365,26 @@ export class FileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * General function to display a snackbar
+   */
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Dismiss', {
       duration: 10000,
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
+  }
+
+  /**
+   * Get a share link, called after share a file or folder
+   * @param entity
+   */
+  gethareLink(entity: ApiFile | Folder): string {
+    if (entity.mimeType === 'inode/directory') {
+      return window.location.origin + this.router.createUrlTree(['/public/folder', entity.uuid]).toString();
+    } else {
+      return window.location.origin + this.router.createUrlTree(['/public/file', entity.uuid]).toString();
+    }
   }
 }

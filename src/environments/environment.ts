@@ -44,6 +44,21 @@ export const environment = {
 
   searchEndpoint: '/search',
 
+  // share file (/<UUID> mandatory)
+  shareFileEndpoint: '/files/share',
+
+  // share folder (/<UUID> mandatory)
+  shareFolderEndpoint: '/folder/share',
+
+  // get all shared files and folders
+  getSharedEntitiesEndpoint: '/share/all',
+
+  // get the list of all shared entities (/<UUID> mandatory)
+  getFilesAndFolderInSharedFolderEndpoint: '/share/folder/content',
+
+  // download a shared file (/<UUID> mandatory)
+  downloadSharedFileEndpoint: '/share/file/download',
+
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
     return `${environment.apiEndoint}/auth/${provider}/signin`;
   },
