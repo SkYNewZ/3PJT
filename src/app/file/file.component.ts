@@ -156,9 +156,9 @@ export class FileComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(name => {
       if (name) {
-        this.fileService.renameFile(entity, name).subscribe((renamedFile: ApiFile) => {
-          entity.name = renamedFile.name;
-          entity.updatedAt = new Date().toISOString();
+        this.fileService.renameFile(entity, name).subscribe((renamedEntity: ApiFile) => {
+          entity.name = renamedEntity.name;
+          entity.updatedAt = renamedEntity.updatedAt;
         });
       }
     });
