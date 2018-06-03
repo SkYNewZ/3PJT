@@ -10,7 +10,7 @@ export class ImageComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ImageComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { imageData: Blob, name: string }
+    @Inject(MAT_DIALOG_DATA) public data: { imageData: Blob, name: string, type: 'image' | 'video', videoType?: string }
   ) { }
 
   ngOnInit() {

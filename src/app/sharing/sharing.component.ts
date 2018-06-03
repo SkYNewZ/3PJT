@@ -144,7 +144,9 @@ export class SharingComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(ImageComponent, {
           data: {
             imageData: this.sanitizer.bypassSecurityTrustUrl(urlCreator.createObjectURL(blob)),
-            name: row.name + row.extention
+            name: row.name + row.extention,
+            type: row.mimeType.includes('video') ? 'video' : 'image',
+            videoType: row.mimeType.includes('video') ? row.mimeType : null
           }
         });
       }, error => {
