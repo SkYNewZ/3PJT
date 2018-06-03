@@ -139,6 +139,7 @@ export class SharingComponent implements OnInit, OnDestroy {
    */
   streamFileOrVideo(row: ApiFile): void {
     if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
+      this.showProgressBar = true;
       this.fileService.streamSharedImage(row).subscribe((blob: Blob) => {
         const urlCreator = window.URL;
         const dialogRef = this.dialog.open(ImageComponent, {
@@ -149,6 +150,7 @@ export class SharingComponent implements OnInit, OnDestroy {
             videoType: row.mimeType.includes('video') ? row.mimeType : null
           }
         });
+        this.showProgressBar = false;
       }, error => {
         console.log(error);
       });
