@@ -16,7 +16,8 @@ import 'rxjs/operator/map';
 import { ISubscription } from 'rxjs/Subscription';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '../models/api-error';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT, DomSanitizer } from '@angular/platform-browser';
+import { ImageComponent } from './streaming/image/image.component';
 
 @Component({
   selector: 'app-file',
@@ -51,6 +52,7 @@ export class FileComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private uploadService: UploadService,
     private snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -316,8 +318,17 @@ export class FileComponent implements OnInit, OnDestroy {
    */
   streamFileOrVideo(row: ApiFile): void {
     if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
-      // todo
-      console.log('todo: view file on double click');
+      this.fileService.streamImage(row).subscribe((blob: Blob) => {
+        const urlCreator = window.URL;
+        const dialogRef = this.dialog.open(ImageComponent, {
+          data: {
+            imageData: this.sanitizer.bypassSecurityTrustUrl(urlCreator.createObjectURL(blob)),
+            name: row.name + row.extention
+          }
+        });
+      }, error => {
+        console.log(error);
+      });
     }
   }
 

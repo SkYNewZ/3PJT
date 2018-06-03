@@ -5,10 +5,12 @@ import { ISubscription } from 'rxjs/Subscription';
 import { File as ApiFile } from '../file/file';
 import { ApiListElement } from '../file/list-element';
 import { Folder } from '../file/folder';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Location } from '@angular/common';
 import { ApiError } from '../models/api-error';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ImageComponent } from '../file/streaming/image/image.component';
 
 @Component({
   selector: 'app-sharing',
@@ -39,7 +41,9 @@ export class SharingComponent implements OnInit, OnDestroy {
     private fileService: FileService,
     private location: Location,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sanitizer: DomSanitizer,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -135,8 +139,17 @@ export class SharingComponent implements OnInit, OnDestroy {
    */
   streamFileOrVideo(row: ApiFile): void {
     if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
-      // todo
-      console.log('todo: view file on double click');
+      this.fileService.streamSharedImage(row).subscribe((blob: Blob) => {
+        const urlCreator = window.URL;
+        const dialogRef = this.dialog.open(ImageComponent, {
+          data: {
+            imageData: this.sanitizer.bypassSecurityTrustUrl(urlCreator.createObjectURL(blob)),
+            name: row.name + row.extention
+          }
+        });
+      }, error => {
+        console.log(error);
+      });
     }
   }
 

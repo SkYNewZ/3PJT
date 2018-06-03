@@ -95,4 +95,20 @@ export class FileService {
       return this.http.put<File | Folder>(`${environment.apiEndoint + environment.shareFileEndpoint}/${entity.uuid}`, body);
     }
   }
+
+  streamImage(entity: File): Observable<Blob> {
+    if (entity.mimeType.includes('video') || entity.mimeType.includes('image')) {
+      return this.http.get(`${environment.apiEndoint + environment.downloadFileEndpoint}/${entity.uuid}`, {
+        responseType: 'blob'
+      });
+    }
+  }
+
+  streamSharedImage(entity: File): Observable<Blob> {
+    if (entity.mimeType.includes('video') || entity.mimeType.includes('image')) {
+      return this.http.get(`${environment.apiEndoint + environment.downloadSharedFileEndpoint}/${entity.uuid}`, {
+        responseType: 'blob'
+      });
+    }
+  }
 }

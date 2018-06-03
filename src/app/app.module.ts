@@ -20,6 +20,7 @@ import { UploadModule } from './upload/upload.module';
 import { InputDialogComponent } from './file/input-dialog/input-dialog.component';
 import { ConfirmationDialogComponent } from './file/confirmation-dialog/confirmation-dialog.component';
 import { SharingComponent } from './sharing/sharing.component';
+import { ImageComponent } from './file/streaming/image/image.component';
 
 export function provideConfig() {
   return new AuthServiceConfig([
@@ -47,7 +48,8 @@ export function tokenGetter() {
     UserProfileComponent,
     InputDialogComponent,
     ConfirmationDialogComponent,
-    SharingComponent
+    SharingComponent,
+    ImageComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +81,7 @@ export function tokenGetter() {
       useFactory: provideConfig
     }
   ],
-  entryComponents: [InputDialogComponent, ConfirmationDialogComponent],
+  entryComponents: [InputDialogComponent, ConfirmationDialogComponent, ImageComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
