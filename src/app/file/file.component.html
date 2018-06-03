@@ -29,9 +29,13 @@
             <span #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"></span>
             <ng-container *ngIf="file.mimeType !== 'inode/directory'">
               <mat-icon class="mat-icon-margin" [svgIcon]="getRightIcon(file.mimeType)" [ngClass]="{'file-blue-icon': getRightIcon(file.mimeType) === 'file_copy'}"></mat-icon>
+              <mat-icon *ngIf="file.shared">share</mat-icon>
             </ng-container>
-            <ng-container *ngIf="file.mimeType === 'inode/directory'">
+            <ng-container *ngIf="file.mimeType === 'inode/directory' && !file.shared">
               <mat-icon style="color: gray" class="mat-icon-margin">folder</mat-icon>
+            </ng-container>
+            <ng-container *ngIf="file.mimeType === 'inode/directory' && file.shared">
+              <mat-icon style="color: gray" class="mat-icon-margin">folder_shared</mat-icon>
             </ng-container>
             {{file.name}}
             <mat-menu #menu="matMenu" yPosition="below" [overlapTrigger]="false">
@@ -39,12 +43,18 @@
                 <mat-icon>create</mat-icon> Rename</button>
               <button mat-menu-item title="Delete file" (click)="deleteEntity(file)">
                 <mat-icon>delete</mat-icon> Delete</button>
-              <button mat-menu-item *ngIf="displayExtraVideoOrPhotoOption(file)" title="View" (click)="navigate(file)">
-                <mat-icon>visibility</mat-icon> View</button>
+              <button mat-menu-item *ngIf="displayExtraVideoOrPhotoOption(file)" title="View" (click)="streamFileOrVideo(file)">
+                <mat-icon>open_in_new</mat-icon> Open</button>
               <button mat-menu-item title="Download this file" (click)="downloadFile(file)">
                 <mat-icon>save</mat-icon> Download</button>
-              <button mat-menu-item title="Share this file" (click)="shareFile(file)">
-                <mat-icon>link</mat-icon> Share</button>
+              <ng-container *ngIf="!file.shared">
+                <button mat-menu-item title="Share this file" (click)="toggleShare(file)">
+                  <mat-icon>link</mat-icon> Share</button>
+              </ng-container>
+              <ng-container *ngIf="file.shared">
+                <button mat-menu-item title="Stop sharing this file" (click)="toggleShare(file)">
+                  <mat-icon>link_off</mat-icon> Stop sharing</button>
+              </ng-container>
             </mat-menu>
           </td>
         </ng-container>

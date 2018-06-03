@@ -26,6 +26,12 @@ const routes: Routes = [
     path: '**',
     redirectTo: '/my-files',
     pathMatch: 'full'
+  },
+  {
+    path: 'public', children: [
+      { path: 'folder/:uuid', pathMatch: 'full', component: FileComponent },
+      { path: 'file/:uuid', pathMatch: 'full', component: FileComponent }
+    ]
   }
 ];
 

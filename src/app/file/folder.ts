@@ -9,6 +9,24 @@ export class Folder {
   private _updatedAt: string;
   private _mimeType: string;
   private _defaultDirectory: boolean;
+  private _shared: boolean;
+
+
+  /**
+   * Getter shared
+   * @return {boolean}
+   */
+  public get shared(): boolean {
+    return this._shared;
+  }
+
+  /**
+   * Setter shared
+   * @param {boolean} value
+   */
+  public set shared(value: boolean) {
+    this._shared = value;
+  }
 
   /**
    * Getter mimeType

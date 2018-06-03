@@ -7,6 +7,23 @@ export class File {
   private _mimeType: string;
   private _createdAt: string;
   private _updatedAt: string;
+  private _shared: boolean;
+
+  /**
+   * Getter shared
+   * @return {boolean}
+   */
+  public get shared(): boolean {
+    return this._shared;
+  }
+
+  /**
+   * Setter shared
+   * @param {boolean} value
+   */
+  public set shared(value: boolean) {
+    this._shared = value;
+  }
 
   public static FROM_JSON(jsonObject: {}): File {
     return plainToClass(File, jsonObject);

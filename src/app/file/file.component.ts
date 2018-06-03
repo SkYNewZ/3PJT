@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Inject } from '@angular/core';
 import { FileService } from './file.service';
 import { File as ApiFile } from './file';
 import { MatTableDataSource, MatSort, MatDialog, MatSnackBar } from '@angular/material';
@@ -16,6 +16,7 @@ import 'rxjs/operator/map';
 import { ISubscription } from 'rxjs/Subscription';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '../models/api-error';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-file',
@@ -32,8 +33,6 @@ export class FileComponent implements OnInit, OnDestroy {
     'createdAt',
     'updatedAt'
   ];
-  public initialSelection = [];
-  public allowMultiSelect = true;
   public selection: SelectionModel<ApiFile> = new SelectionModel<ApiFile>(
     false,
     null
@@ -50,7 +49,7 @@ export class FileComponent implements OnInit, OnDestroy {
     private ss: SharedService,
     private dialog: MatDialog,
     private uploadService: UploadService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -204,9 +203,6 @@ export class FileComponent implements OnInit, OnDestroy {
   navigate(row: ApiFile | Folder): void {
     if (row.mimeType === 'inode/directory') {
       this.router.navigate(['/folder', row.uuid]);
-    } else if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
-      // todo
-      console.log('todo: view file on double click');
     }
   }
 
@@ -250,12 +246,26 @@ export class FileComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource(t.concat(folders).concat(files));
   }
 
-  shareFile(entity: ApiFile | Folder): void {
-    console.log('TODO: share');
+  toggleShare(entity: ApiFile | Folder): void {
+    this.fileService.shareOrUnshareEntity(entity).subscribe((newEntity: ApiFile | Folder) => {
+      entity.shared = newEntity.shared;
+
+      // create share link only if the user want to save
+      if (entity.shared) {
+        console.log(this.gethareLink(entity)); // TODO: copy to clipboard
+      }
+    });
   }
 
   displayExtraVideoOrPhotoOption(file: ApiFile): boolean {
     return (file.mimeType.includes('video') || file.mimeType.includes('image')) ? true : false;
+  }
+
+  streamFileOrVideo(row: ApiFile): void {
+    if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
+      // todo
+      console.log('todo: view file on double click');
+    }
   }
 
   dropped(event: UploadEvent): void {
@@ -291,5 +301,13 @@ export class FileComponent implements OnInit, OnDestroy {
       verticalPosition: 'top',
       horizontalPosition: 'right'
     });
+  }
+
+  gethareLink(entity: ApiFile | Folder): string {
+    if (entity.mimeType === 'inode/directory') {
+      return window.location.origin + this.router.createUrlTree(['/public/folder', entity.uuid]).toString();
+    } else {
+      return window.location.origin + this.router.createUrlTree(['/public/file', entity.uuid]).toString();
+    }
   }
 }

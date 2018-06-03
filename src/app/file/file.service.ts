@@ -68,4 +68,15 @@ export class FileService {
   search(query: string): Observable<(File | Folder)[]> {
     return this.http.get<any>(environment.getSearchUrl(query));
   }
+
+  shareOrUnshareEntity(entity: File | Folder): Observable<(File | Folder)> {
+    const body: { shared: boolean } = {
+      shared: !entity.shared
+    };
+    if (entity.mimeType === 'inode/directory') {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.shareFolderEndpoint}/${entity.uuid}`, body);
+    } else {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.shareFileEndpoint}/${entity.uuid}`, body);
+    }
+  }
 }
