@@ -1,20 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OfferService } from './offer.service';
 import { Offer } from './offer';
 import { AuthService } from '../auth/auth.service';
 import { UserApp } from '../models/main-user';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-offer',
   templateUrl: './offer.component.html',
   styleUrls: ['./offer.component.css']
 })
-export class OfferComponent implements OnInit {
+export class OfferComponent implements OnInit, OnDestroy {
 
   public offers: Offer[] = [];
   private user: UserApp;
+  private subscribeToOfferSub: ISubscription;
+  private updateUserSub: ISubscription;
+  public cannotSubscribe: Boolean = false;
 
   constructor(
     private offerService: OfferService,
@@ -34,6 +38,14 @@ export class OfferComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.subscribeToOfferSub) {
+      this.subscribeToOfferSub.unsubscribe();
+      this.updateUserSub.unsubscribe();
+      this.toastr.clear();
+    }
+  }
+
   ifUserHaveTheSameOffer(currentOffer: Offer): boolean {
     return this.user.offre.price === currentOffer.price;
   }
@@ -43,10 +55,11 @@ export class OfferComponent implements OnInit {
    * @param offer
    */
   subscribeToOffer(offer: Offer): void {
-    this.offerService.subscribeToOffer(offer).subscribe((newOffer: Offer) => {
+    this.subscribeToOfferSub = this.offerService.subscribeToOffer(offer).subscribe((newOffer: Offer) => {
       this.user.offre = newOffer; // register the new offer in the current user
-      this.authService.updateUser(this.user).subscribe((newUser: UserApp) => { // update the current user
+      this.updateUserSub = this.authService.updateUser(this.user).subscribe((newUser: UserApp) => { // update the current user
         this.toastr.success(`You successfully subscribed to the ${newOffer.name} offer`);
+        this.cannotSubscribe = true;
       }, (err: HttpErrorResponse) => {
         this.toastr.error('Unexpected error, please try again later');
         console.log(err);

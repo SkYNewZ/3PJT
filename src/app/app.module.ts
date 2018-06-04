@@ -80,7 +80,9 @@ export function tokenGetter() {
     ToastrModule.forRoot({
       autoDismiss: true,
       progressBar: true,
-      progressAnimation: 'decreasing'
+      progressAnimation: 'decreasing',
+      preventDuplicates: true,
+      maxOpened: 1
     })
   ],
   providers: [

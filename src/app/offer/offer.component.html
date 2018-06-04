@@ -25,7 +25,7 @@
                 </p>
               </mat-card-content>
               <mat-card-actions fxLayoutAlign="end">
-                <button mat-raised-button color="primary" [disabled]="ifUserHaveTheSameOffer(offer)" (click)="subscribeToOffer(offer)">Subscribe to this offer
+                <button mat-raised-button color="primary" [disabled]="ifUserHaveTheSameOffer(offer) || cannotSubscribe" (click)="subscribeToOffer(offer)">Subscribe to this offer
                   <span class="price">{{ offer.price }}$</span>
                 </button>
               </mat-card-actions>
