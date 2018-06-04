@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { FileDropModule } from 'ngx-file-drop';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -73,7 +74,12 @@ export function tokenGetter() {
       }
     }),
     UploadModule,
-    FileDropModule
+    FileDropModule,
+    ToastrModule.forRoot({
+      autoDismiss: true,
+      progressBar: true,
+      progressAnimation: 'decreasing'
+    })
   ],
   providers: [
     {
