@@ -5,8 +5,8 @@ import { UserProfileService } from './user-profile.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5';
 import { Router } from '@angular/router';
-import { Offer } from '../models/offer';
 import { ToastrService } from 'ngx-toastr';
+import { Offer } from '../offer/offer';
 
 @Component({
   selector: 'app-user-profile',

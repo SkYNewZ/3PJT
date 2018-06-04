@@ -3,7 +3,6 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { File } from './file';
-import 'rxjs/add/observable/of';
 import { ApiListElement } from './list-element';
 import { Folder } from './folder';
 

@@ -1,6 +1,6 @@
 import { plainToClass, classToPlain } from 'class-transformer';
 import { Md5 } from 'ts-md5';
-import { Offer } from './offer';
+import { Offer } from '../offer/offer';
 
 export class UserApp {
     private _firstname: string;

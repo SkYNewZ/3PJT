@@ -1,9 +1,42 @@
 import { plainToClass, classToPlain } from 'class-transformer';
 
 export class Offer {
-    private _id: number;
-    private name: string;
+    private _name: string;
     private _maxSize: number;
+    private _description: string;
+    private _price: number;
+
+    /**
+     * Getter description
+     * @return {string}
+     */
+    public get description(): string {
+        return this._description;
+    }
+
+    /**
+     * Setter description
+     * @param {string} value
+     */
+    public set description(value: string) {
+        this._description = value;
+    }
+
+    /**
+     * Getter price
+     * @return {number}
+     */
+    public get price(): number {
+        return this._price;
+    }
+
+    /**
+     * Setter price
+     * @param {number} value
+     */
+    public set price(value: number) {
+        this._price = value;
+    }
 
     public static FROM_JSON(jsonObject: {}): Offer {
         return plainToClass(Offer, jsonObject);
@@ -13,37 +46,20 @@ export class Offer {
         return classToPlain(this);
     }
 
-
     /**
-     * Getter id
-     * @return {number}
-     */
-    public get id(): number {
-        return this._id;
-    }
-
-    /**
-     * Setter id
-     * @param {number} value
-     */
-    public set id(value: number) {
-        this._id = value;
-    }
-
-    /**
-     * Getter $name
+     * Getter name
      * @return {string}
      */
-    public get $name(): string {
-        return this.name;
+    public get name(): string {
+        return this._name;
     }
 
     /**
-     * Setter $name
+     * Setter name
      * @param {string} value
      */
-    public set $name(value: string) {
-        this.name = value;
+    public set name(value: string) {
+        this._name = value;
     }
 
     /**
@@ -77,5 +93,7 @@ export class Offer {
     public get maxSizeInGB(): number {
         return this._maxSize / 1073741824;
     }
+
+
 
 }
