@@ -109,6 +109,14 @@ export class FileComponent implements OnInit, OnDestroy {
           this.dataSource = new MatTableDataSource([]);
         }
         this.showLoader = false;
+      }, (err: HttpErrorResponse) => {
+        if (err.status === 404) {
+          this.openSnackBar('This folder does not exist');
+        } else {
+          this.openSnackBar('Unexpected error, please try again later');
+        }
+        console.log(err);
+        this.showLoader = false;
       });
   }
 

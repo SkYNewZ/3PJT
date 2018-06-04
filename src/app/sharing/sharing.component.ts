@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 import { ApiError } from '../models/api-error';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageComponent } from '../file/streaming/image/image.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-sharing',
@@ -93,9 +94,9 @@ export class SharingComponent implements OnInit, OnDestroy {
           this.dataSource = new MatTableDataSource([]);
         }
         this.showLoader = false;
-      }, (err) => {
-        if (err.error === 'This folder is not shared') {
-          this.openSnackBar('The folder you try to access to is not shared');
+      }, (err: HttpErrorResponse) => {
+        if (err.status === 404) {
+          this.openSnackBar('This folder does not exist or is not shared');
         } else {
           this.openSnackBar('Unexpected error, please try again later');
         }
