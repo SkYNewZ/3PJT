@@ -1,0 +1,38 @@
+<app-navbar></app-navbar>
+
+<ng-container *ngIf="offers">
+  <div class="container">
+    <mat-card>
+      <mat-card-title>List of availables offers</mat-card-title>
+      <mat-card-subtitle>Choose the offer that best suits you</mat-card-subtitle>
+      <mat-card-content id="main-content">
+        <div fxLayout="row" fxLayoutAlign="space-evenly center">
+          <ng-container *ngFor="let offer of offers">
+            <mat-card class="example-card">
+              <mat-card-header>
+                <div mat-card-avatar>
+                  <mat-icon>star</mat-icon>
+                </div>
+                <mat-card-title>{{ offer.name }}
+                  <span routerLink="/profile" *ngIf="ifUserHaveTheSameOffer(offer)" id="current-offer">(You currently have this offer)</span>
+                </mat-card-title>
+                <mat-card-subtitle>Provide
+                  <span class="price">{{ offer.maxSizeInGB }}GB</span> of max space available</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>
+                  {{ offer.description }}
+                </p>
+              </mat-card-content>
+              <mat-card-actions fxLayoutAlign="end">
+                <button mat-raised-button color="primary">Subscribe to this offer
+                  <span class="price">{{ offer.price }}$</span>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </ng-container>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-container>

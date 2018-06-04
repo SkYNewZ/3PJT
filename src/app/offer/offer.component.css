@@ -1,0 +1,27 @@
+.example-card {
+    max-width: 400px;
+    height: 250px;
+}
+
+img {
+    border-radius: 0%
+}
+
+mat-card-content#main-content {
+    margin-top: 30px
+}
+
+p {
+    height: 90px
+}
+
+.price {
+    font-weight: bold;
+    /* color: #3f51b5; */
+}
+
+#current-offer {
+    font-style: italic;
+    text-decoration: underline;
+    cursor: pointer;
+}

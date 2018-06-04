@@ -8,7 +8,6 @@ export class SharedService {
   @Output() fire: EventEmitter<File> = new EventEmitter();
 
   constructor() {
-    console.log('shared service started');
   }
 
   newUploadedFile(file: File): void {

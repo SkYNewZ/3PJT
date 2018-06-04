@@ -59,6 +59,9 @@ export const environment = {
   // download a shared file (/<UUID> mandatory)
   downloadSharedFileEndpoint: '/share/file/download',
 
+  // list all offers
+  listAvailablesOffersEndpoint: '/offers',
+
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
     return `${environment.apiEndoint}/auth/${provider}/signin`;
   },
