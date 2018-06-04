@@ -14,4 +14,11 @@ export class OfferService {
   get availablesOffers(): Observable<Offer[]> {
     return this.http.get<Offer[]>(environment.apiEndoint + environment.listAvailablesOffersEndpoint);
   }
+
+  subscribeToOffer(offer: Offer): Observable<Offer> {
+    const body: { name: string } = {
+      name: offer.name
+    };
+    return this.http.put<Offer>(environment.apiEndoint + environment.updateUserOfferEndpoint, body);
+  }
 }

@@ -62,6 +62,9 @@ export const environment = {
   // list all offers
   listAvailablesOffersEndpoint: '/offers',
 
+  // update user offer
+  updateUserOfferEndpoint: '/user/offer',
+
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
     return `${environment.apiEndoint}/auth/${provider}/signin`;
   },

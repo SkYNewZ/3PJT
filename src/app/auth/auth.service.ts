@@ -48,6 +48,11 @@ export class AuthService {
     );
   }
 
+  updateUser(newUser: UserApp): Observable<UserApp> {
+    this.user.next(newUser);
+    return this.user.asObservable();
+  }
+
   logout() {
     this.user.next(new UserApp());
     localStorage.removeItem('access_token');
