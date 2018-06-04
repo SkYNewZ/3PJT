@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-input-dialog',
-  templateUrl: 'input-dialog.html'
+  templateUrl: 'input-dialog.html',
+  styleUrls: ['input-dialog.component.css']
 })
 export class InputDialogComponent implements OnInit, AfterViewChecked {
 
