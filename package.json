@@ -1,6 +1,6 @@
 {
   "name": "supdrive",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -46,6 +46,7 @@
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "ngx-file-drop": "^4.0.4",
+    "ngx-toastr": "^8.7.3",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.1.0",
     "rxjs-compat": "^6.1.0",

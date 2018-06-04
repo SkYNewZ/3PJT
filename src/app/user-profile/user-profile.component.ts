@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserApp } from '../models/main-user';
 import { AuthService } from '../auth/auth.service';
 import { UserProfileService } from './user-profile.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5';
-import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { Offer } from '../models/offer';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit, OnDestroy {
 
   public user: UserApp = null;
   public form: FormGroup;
@@ -22,7 +22,7 @@ export class UserProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,
+    private toastr: ToastrService,
     private routeur: Router,
     private authService: AuthService,
     private userService: UserProfileService
@@ -42,27 +42,23 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.toastr.clear();
+  }
+
   onSubmit(): void {
     this.formSubmitAttempt = true;
     if (this.form.valid) {
       this.userService.updateUser(this.form.value).subscribe((user: UserApp) => {
         const newUser: UserApp = UserApp.FROM_JSON(user);
         this.authService.login(newUser);
-        this.openSnackBar('Success');
+        this.toastr.success('Success');
         this.form.get('password').reset();
         this.formSubmitAttempt = false;
       }, (err) => {
         console.log(err);
       });
     }
-  }
-
-  openSnackBar(message: string) {
-    this.snackBar.open(message, 'Dismiss', {
-      duration: 10000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right'
-    });
   }
 
   manageOffer(event: MouseEvent): void {

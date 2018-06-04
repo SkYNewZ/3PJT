@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy, Inject } from '@angular/core';
 import { FileService } from './file.service';
 import { File as ApiFile } from './file';
-import { MatTableDataSource, MatSort, MatDialog, MatSnackBar } from '@angular/material';
+import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ApiListElement } from './list-element';
 import { Folder } from './folder';
@@ -18,6 +18,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ApiError } from '../models/api-error';
 import { DOCUMENT, DomSanitizer } from '@angular/platform-browser';
 import { ImageComponent } from './streaming/image/image.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-file',
@@ -51,8 +52,8 @@ export class FileComponent implements OnInit, OnDestroy {
     private ss: SharedService,
     private dialog: MatDialog,
     private uploadService: UploadService,
-    private snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -70,6 +71,7 @@ export class FileComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.newFileSub.unsubscribe();
     this.uuidSub.unsubscribe();
+    this.toastr.clear();
   }
 
   /**
@@ -108,6 +110,14 @@ export class FileComponent implements OnInit, OnDestroy {
         } else {
           this.dataSource = new MatTableDataSource([]);
         }
+        this.showLoader = false;
+      }, (err: HttpErrorResponse) => {
+        if (err.status === 404) {
+          this.toastr.warning('This folder does not exist');
+        } else {
+          this.toastr.error('Unexpected error, please try again later');
+        }
+        console.log(err);
         this.showLoader = false;
       });
   }
@@ -318,6 +328,7 @@ export class FileComponent implements OnInit, OnDestroy {
    */
   streamFileOrVideo(row: ApiFile): void {
     if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
+      this.showProgressBar = true;
       this.fileService.streamImage(row).subscribe((blob: Blob) => {
         const urlCreator = window.URL;
         const dialogRef = this.dialog.open(ImageComponent, {
@@ -328,6 +339,7 @@ export class FileComponent implements OnInit, OnDestroy {
             videoType: row.mimeType.includes('video') ? row.mimeType : null
           }
         });
+        this.showProgressBar = false;
       }, error => {
         console.log(error);
       });
@@ -354,7 +366,7 @@ export class FileComponent implements OnInit, OnDestroy {
               const apiError: ApiError = ApiError.FROM_JSON(err.error);
               console.error(`Error during upload on drag & drop - ${apiError.status} - ${apiError.message}`);
               if (apiError.message.includes('upload size exceeded')) {
-                this.openSnackBar('File too big to upload');
+                this.toastr.warning('File too big to upload');
               }
             } else {
               console.error(err);
@@ -363,17 +375,6 @@ export class FileComponent implements OnInit, OnDestroy {
         });
       }
     }
-  }
-
-  /**
-   * General function to display a snackbar
-   */
-  openSnackBar(message: string) {
-    this.snackBar.open(message, 'Dismiss', {
-      duration: 10000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right'
-    });
   }
 
   /**

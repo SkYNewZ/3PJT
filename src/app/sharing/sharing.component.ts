@@ -5,12 +5,14 @@ import { ISubscription } from 'rxjs/Subscription';
 import { File as ApiFile } from '../file/file';
 import { ApiListElement } from '../file/list-element';
 import { Folder } from '../file/folder';
-import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Location } from '@angular/common';
 import { ApiError } from '../models/api-error';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageComponent } from '../file/streaming/image/image.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sharing',
@@ -41,9 +43,9 @@ export class SharingComponent implements OnInit, OnDestroy {
     private fileService: FileService,
     private location: Location,
     private router: Router,
-    private snackBar: MatSnackBar,
     private sanitizer: DomSanitizer,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -54,6 +56,7 @@ export class SharingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.uuidSub.unsubscribe();
+    this.toastr.clear();
   }
 
   /**
@@ -93,11 +96,11 @@ export class SharingComponent implements OnInit, OnDestroy {
           this.dataSource = new MatTableDataSource([]);
         }
         this.showLoader = false;
-      }, (err) => {
-        if (err.error === 'This folder is not shared') {
-          this.openSnackBar('The folder you try to access to is not shared');
+      }, (err: HttpErrorResponse) => {
+        if (err.status === 404) {
+          this.toastr.warning('This folder does not exist or is not shared');
         } else {
-          this.openSnackBar('Unexpected error, please try again later');
+          this.toastr.error('Unexpected error, please try again later');
         }
         console.log(err);
         this.showLoader = false;
@@ -118,7 +121,7 @@ export class SharingComponent implements OnInit, OnDestroy {
         link.download = file.name + file.extention;
         link.click();
       }, (err) => {
-        this.openSnackBar('Unexpected error, please try again later');
+        this.toastr.error('Unexpected error, please try again later');
         console.log(err);
         this.showProgressBar = false;
       });
@@ -139,6 +142,7 @@ export class SharingComponent implements OnInit, OnDestroy {
    */
   streamFileOrVideo(row: ApiFile): void {
     if (row.mimeType.includes('video') || row.mimeType.includes('image')) {
+      this.showProgressBar = true;
       this.fileService.streamSharedImage(row).subscribe((blob: Blob) => {
         const urlCreator = window.URL;
         const dialogRef = this.dialog.open(ImageComponent, {
@@ -149,6 +153,7 @@ export class SharingComponent implements OnInit, OnDestroy {
             videoType: row.mimeType.includes('video') ? row.mimeType : null
           }
         });
+        this.showProgressBar = false;
       }, error => {
         console.log(error);
       });
@@ -220,17 +225,6 @@ export class SharingComponent implements OnInit, OnDestroy {
     if (row.mimeType === 'inode/directory') {
       this.router.navigate(['/public/folder', row.uuid]);
     }
-  }
-
-  /**
-   * General function to display a snackbar
-   */
-  openSnackBar(message: string) {
-    this.snackBar.open(message, 'Dismiss', {
-      duration: 10000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right'
-    });
   }
 
 }

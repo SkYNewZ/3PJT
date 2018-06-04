@@ -73,21 +73,4 @@ export class NavbarComponent implements OnInit {
       this.searching = false;
     });
   }
-
-  /**
-   * Used for the autocomplete, display direct links and icons on each seach result
-   * @param currentSearch
-   */
-  onType(currentSearch: string): void {
-    if (currentSearch.length > 3) {
-      this.searching = true;
-      this.fileService.search(this.searchControl.get('input').value).subscribe((entities: (File | Folder)[]) => {
-        this.searching = false;
-        this.options = entities;
-      }, (err) => {
-        console.log(err);
-        this.searching = false;
-      });
-    }
-  }
 }
