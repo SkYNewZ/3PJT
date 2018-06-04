@@ -12,7 +12,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
 import { UserApp } from '../models/main-user';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { MatSnackBar } from '@angular/material';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     private authService: AuthService,
     private router: Router,
     private jwtService: JwtHelperService,
-    private snackBar: MatSnackBar
+    private toastr: ToastrService
   ) { }
 
   // common auth
@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     } else if (this.jwtService.isTokenExpired()) {
       // if token is expired
       console.log('Token is expired');
-      this.openSnackBar('Session expired, please login in');
+      this.toastr.info('Session expired, please login in');
       this.logout();
       this.router.navigate(['login'], {
         queryParams: { redirect_uri: state.url }
@@ -53,7 +53,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     ) {
       // if token will be expired in 5min
       console.log('Token will expire in 5minutes');
-      this.openSnackBar('Session expired, please login in');
+      this.toastr.info('Session expired, please login in');
       this.logout();
       this.router.navigate(['login'], {
         queryParams: { redirect_uri: state.url }
@@ -84,12 +84,5 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   private logout(): void {
     this.authService.user.next(new UserApp());
     localStorage.removeItem('access_token');
-  }
-  private openSnackBar(message: string) {
-    this.snackBar.open(message, 'Dismiss', {
-      duration: 10000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right'
-    });
   }
 }
