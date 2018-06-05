@@ -5,7 +5,7 @@ import { User } from './user';
 import { LoginUser } from '../models/login-user';
 import { Observable } from 'rxjs';
 import { LoginSuccess } from '../models/login-success';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { UserApp } from '../models/main-user';
 import { JwtApp } from '../models/jwt';
@@ -16,6 +16,7 @@ import {
   SocialUser
 } from 'angularx-social-login';
 import { Location } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,8 @@ export class AuthService {
     private router: Router,
     private http: HttpClient,
     private socialAuthService: SocialAuthService,
-    private location: Location
+    private location: Location,
+    private toastr: ToastrService
   ) { }
 
   public get isLoggedIn(): Observable<UserApp> {
@@ -99,7 +101,13 @@ export class AuthService {
             this.user.next(user);
             this.location.replaceState('/');
             this.router.navigateByUrl(returnUrl);
+          }, (err: HttpErrorResponse) => {
+            this.toastr.error('Unexpected error, please try again later');
+            console.log(err);
           });
+      }, (err: HttpErrorResponse) => {
+        this.toastr.error('Unexpected error, please try again later');
+        console.log(err);
       });
   }
 
@@ -127,7 +135,13 @@ export class AuthService {
             this.user.next(user);
             this.location.replaceState('/');
             this.router.navigateByUrl(returnUrl);
+          }, (err: HttpErrorResponse) => {
+            this.toastr.error('Unexpected error, please try again later');
+            console.log(err);
           });
+      }, (err: HttpErrorResponse) => {
+        this.toastr.error('Unexpected error, please try again later');
+        console.log(err);
       });
   }
 }
