@@ -58,7 +58,7 @@ export class AuthService {
   logout() {
     this.user.next(new UserApp());
     localStorage.removeItem('access_token');
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/');
     // this.socialAuthService.signOut(); REMOVED 26/05/2018, it disconnect from the social network
   }
 

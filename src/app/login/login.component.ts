@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams['redirect_uri'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['redirect_uri'] || '/my-files';
     this.form = this.fb.group({
       usernameOrEmail: ['', Validators.required],
       password: ['', Validators.required]

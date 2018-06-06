@@ -23,6 +23,7 @@ import { ConfirmationDialogComponent } from './file/confirmation-dialog/confirma
 import { SharingComponent } from './sharing/sharing.component';
 import { ImageComponent } from './file/streaming/image/image.component';
 import { OfferComponent } from './offer/offer.component';
+import { HomeComponent } from './home/home.component';
 
 export function provideConfig() {
   return new AuthServiceConfig([
@@ -52,7 +53,8 @@ export function tokenGetter() {
     ConfirmationDialogComponent,
     SharingComponent,
     ImageComponent,
-    OfferComponent
+    OfferComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

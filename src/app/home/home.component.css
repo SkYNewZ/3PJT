@@ -1,0 +1,271 @@
+header {
+  height: 60px;
+  display: flex;
+  vertical-align: center;
+  background: #003545;
+  align-items: center;
+  padding: 0 15px;
+}
+
+header img {
+  height: 40px;
+  margin-right: 15px
+}
+
+header span {
+  color: #f7f7f7;
+}
+
+header a {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: block;
+  height: 60px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 15px;
+  color: #f7f7f7;
+  background: #20c1bd;
+  padding: 15px 30px;
+  border: 1px solid #f7f7f7;
+  display: block;
+  box-sizing: border-box;
+  line-height: 30px;
+}
+
+.jumbotron {
+  height: calc(100vh - 60px);
+  background-image: url('/assets/images/intro.jpg');
+  background-size: cover;
+}
+
+.jumbotron {
+  position: relative;
+}
+
+.jumbotron p {
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #f7f7f7;
+  font-size: 60px;
+  text-align: center;
+}
+
+.jumbotron a {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 30px;
+  color: #f7f7f7;
+  background: #20c1bd;
+  padding: 15px 30px;
+  border: 1px solid #f7f7f7;
+  display: block;
+  margin-top: 35px;
+}
+
+.intro {
+  min-height: 20vh;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.intro {
+  display: flex;
+  padding: 3em 0;
+}
+
+.intro .svg {
+  width: 15%;
+}
+
+.intro p {
+  width: 30%;
+  padding-right: 20%;
+  padding: 20px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.afterIntro {
+  min-height: 60vh;
+  background-image: url('https://placeimg.com/1000/600/tech?t=1528284316201');
+  background-size: cover;
+}
+
+.svg-logo, .file-icon {
+  -ms-transform-origin: center center;
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+}
+
+.file-icon {
+  display: none;
+}
+
+.st1 {
+  fill: #E6E7E8;
+}
+
+.st1b {
+  fill: #cfd1d3;
+}
+
+.st2 {
+  fill: #DF4431;
+  stroke: #E6E7E8;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+}
+
+.st3 {
+  fill: #2054B2;
+}
+
+.st4 {
+  fill: #F1F2F2;
+}
+
+.st5 {
+  fill: #F6B502;
+}
+
+.st6 {
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 5;
+  stroke-miterlimit: 10;
+}
+
+.st7 {
+  fill: #FB7659;
+}
+
+.st8 {
+  opacity: 0.2;
+}
+
+.st9 {
+  opacity: 0.4;
+  fill: #231F20;
+}
+
+.st10 {
+  fill: #FF7300;
+}
+
+.st11 {
+  fill: #FFE25E;
+}
+
+.st12 {
+  fill: #FFFFFF;
+}
+
+.st13 {
+  fill: none;
+}
+
+.st14 {
+  fill: #CC338E;
+}
+
+.st15 {
+  fill: #9EC2FF;
+}
+
+.st16 {
+  fill: #3980FC;
+}
+
+.st17 {
+  opacity: 0.4;
+  fill: #FFFFFF;
+}
+
+.st18 {
+  fill: #029D55;
+}
+
+.st19 {
+  fill: #D89F01;
+}
+
+.st20 {
+  display: none;
+}
+
+.st21 {
+  fill: #DF4431;
+  stroke: #DF4431;
+  stroke-width: 1.875;
+  stroke-miterlimit: 1;
+}
+
+.st22 {
+  fill: #DF4431;
+}
+
+.st22b {
+  fill: #c31209;
+}
+
+.st23 {
+  fill: #fc4e1e;
+}
+
+.st24 {
+  fill: #fd9827;
+}
+
+.logo-st0 {
+  fill: url(#SVGID_1_);
+}
+
+.logo-st1 {
+  fill: url(#SVGID_2_);
+}
+
+.logo-st2 {
+  fill: #0DA960;
+}
+
+.logo-st3 {
+  fill: #2d6fdd;
+}
+
+.logo-st4 {
+  fill: #e5b93c;
+}
+
+.logo-st5 {
+  fill: #0c9b57;
+}
+
+.type {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.type .text {
+  width: 50%;
+  padding: 3em;
+  font-size: 30px;
+  text-align: center;
+}
+
+.type .svg {
+  padding: 3em;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.afterType {
+  min-height: 60vh;
+  background-image: url('https://placeimg.com/1000/600/tech?t=1528284905488');
+  background-size: cover;
+}
