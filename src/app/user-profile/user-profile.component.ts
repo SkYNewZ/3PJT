@@ -28,8 +28,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.authService.isLoggedIn.subscribe((user: UserApp) => {
-      this.user = user;
+    this.userService.getUserInfo().subscribe((user: UserApp) => {
+      this.user = UserApp.FROM_JSON(user); // refresh user info each time it consult this page
+      this.authService.login(this.user);
       this.form = this.fb.group({
         firstname: [this.user.firstname, Validators.required],
         lastname: [this.user.lastname, Validators.required],
