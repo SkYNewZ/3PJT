@@ -13,9 +13,8 @@ import { ISubscription } from 'rxjs/Subscription';
   styleUrls: ['./offer.component.css']
 })
 export class OfferComponent implements OnInit, OnDestroy {
-
   public offers: Offer[] = [];
-  private user: UserApp;
+  public user: UserApp;
   private subscribeToOfferSub: ISubscription;
   private updateUserSub: ISubscription;
   public cannotSubscribe: Boolean = false;
@@ -24,17 +23,17 @@ export class OfferComponent implements OnInit, OnDestroy {
     private offerService: OfferService,
     private authService: AuthService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.offerService.availablesOffers.subscribe((offers: Offer[]) => {
       offers.forEach(offer => {
         this.offers.push(Offer.FROM_JSON(offer));
-        this.offers.sort((a, b) => a.name === 'BASIC' ? -1 : 1);
+        this.offers.sort((a, b) => (a.name === 'BASIC' ? -1 : 1));
       });
-      this.authService.isLoggedIn.subscribe((user: UserApp) => {
-        this.user = UserApp.FROM_JSON(user);
-      });
+    });
+    this.authService.isLoggedIn.subscribe((user: UserApp) => {
+      this.user = UserApp.FROM_JSON(user);
     });
   }
 
@@ -55,19 +54,43 @@ export class OfferComponent implements OnInit, OnDestroy {
    * @param offer
    */
   subscribeToOffer(offer: Offer): void {
-    this.subscribeToOfferSub = this.offerService.subscribeToOffer(offer).subscribe((newOffer: Offer) => {
-      this.user.offre = newOffer; // register the new offer in the current user
-      this.updateUserSub = this.authService.updateUser(this.user).subscribe((newUser: UserApp) => { // update the current user
-        this.toastr.success(`You successfully subscribed to the ${newOffer.name} offer`);
-        this.cannotSubscribe = true;
-      }, (err: HttpErrorResponse) => {
-        this.toastr.error('Unexpected error, please try again later');
-        console.log(err);
-      });
-    }, (err: HttpErrorResponse) => {
-      this.toastr.error('Unexpected error, please try again later');
-      console.log(err);
-    });
+    this.subscribeToOfferSub = this.offerService
+      .subscribeToOffer(offer)
+      .subscribe(
+        (newOffer: Offer) => {
+          this.user.offre = newOffer; // register the new offer in the current user
+          this.updateUserSub = this.authService.updateUser(this.user).subscribe(
+            (newUser: UserApp) => {
+              // update the current user
+              this.toastr.success(
+                `You successfully subscribed to the ${newOffer.name} offer`
+              );
+              this.cannotSubscribe = true;
+            },
+            (err: HttpErrorResponse) => {
+              this.toastr.error('Unexpected error, please try again later');
+              console.log(err);
+            }
+          );
+        },
+        (err: HttpErrorResponse) => {
+          this.toastr.error('Unexpected error, please try again later');
+          console.log(err);
+        }
+      );
   }
 
+  public get quota(): number {
+    const maxSizeAvailable: number = this.user.offre.maxSize;
+    const currentSizeUsed: number = this.user.currentDataSize;
+    const percentage: number = (currentSizeUsed * 100) / maxSizeAvailable;
+    return Math.round(percentage);
+  }
+
+  public get formatedQuota(): string {
+    const offer: Offer = Offer.FROM_JSON(this.user.offre);
+    return `${this.quota}% - ${this.user.currentDataSizeInGB.toFixed(
+      2
+    )}GB/${offer.maxSizeInGB.toFixed(2)}GB`;
+  }
 }

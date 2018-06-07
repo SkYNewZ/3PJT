@@ -20,7 +20,7 @@
                   <span class="price">{{ offer.maxSizeInGB }}GB</span> of max space available</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
-                <p>
+                <p class="offer-desc">
                   {{ offer.description }}
                 </p>
               </mat-card-content>
@@ -31,6 +31,11 @@
               </mat-card-actions>
             </mat-card>
           </ng-container>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="space-around stretch" class="mat-elevation-z8" id="quota">
+          <p>Quota (You benefit from the
+            <span title="Mange my offer">{{ user.offre.name }}</span> offer) : {{ formatedQuota }}</p>
+          <mat-progress-bar mode="determinate" [value]="quota"></mat-progress-bar>
         </div>
       </mat-card-content>
     </mat-card>
