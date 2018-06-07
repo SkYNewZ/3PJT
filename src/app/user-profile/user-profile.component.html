@@ -44,7 +44,7 @@
           </div>
           <div fxLayout="column" fxLayoutAlign="space-around stretch" class="mat-elevation-z8" id="quota">
             <p>Quota (You benefit from the
-              <a href="#" (click)="manageOffer($event)" title="Mange my offer">BASIC</a> offer) : {{ formatedQuota }}</p>
+              <a href="#" routerLink="/offers" title="Mange my offer">{{ user.offre.name }}</a> offer) : {{ formatedQuota }}</p>
             <mat-progress-bar mode="determinate" [value]="quota"></mat-progress-bar>
           </div>
         </mat-card-content>

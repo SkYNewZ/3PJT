@@ -5,7 +5,7 @@ import { User } from './user';
 import { LoginUser } from '../models/login-user';
 import { Observable } from 'rxjs';
 import { LoginSuccess } from '../models/login-success';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { UserApp } from '../models/main-user';
 import { JwtApp } from '../models/jwt';
@@ -16,6 +16,7 @@ import {
   SocialUser
 } from 'angularx-social-login';
 import { Location } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,9 @@ export class AuthService {
     private router: Router,
     private http: HttpClient,
     private socialAuthService: SocialAuthService,
-    private location: Location
-  ) { }
+    private location: Location,
+    private toastr: ToastrService
+  ) {}
 
   public get isLoggedIn(): Observable<UserApp> {
     return this.user.asObservable();
@@ -56,7 +58,7 @@ export class AuthService {
   logout() {
     this.user.next(new UserApp());
     localStorage.removeItem('access_token');
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/');
     // this.socialAuthService.signOut(); REMOVED 26/05/2018, it disconnect from the social network
   }
 
@@ -70,15 +72,14 @@ export class AuthService {
   checkUsernameAvailability(username: string): Observable<Boolean> {
     return this.http.get<Boolean>(
       `${environment.apiEndoint +
-      environment.checkUsernameAvailabilityEndpoint}?username=${username}`
+        environment.checkUsernameAvailabilityEndpoint}?username=${username}`
     );
   }
 
   signInWithGoogle(returnUrl?: string): void {
     // get google info
-    this.socialAuthService
-      .signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then((googleUser: SocialUser) => {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
+      (googleUser: SocialUser) => {
         // get api token
         const body: { accessToken: string } = {
           accessToken: googleUser.authToken
@@ -88,25 +89,35 @@ export class AuthService {
             environment.getSocialSignInEndpoint('google'),
             body
           )
-          .subscribe((jwt: JwtApp) => {
-            localStorage.setItem('access_token', jwt.accessToken);
-            const user: UserApp = new UserApp();
-            user.firstname = googleUser.name.split(' ')[0];
-            user.lastname = googleUser.name.split(' ')[1];
-            user.email = googleUser.email;
-            user.photoUrl = googleUser.photoUrl;
-            user.provider = 'google';
-            this.user.next(user);
-            this.location.replaceState('/');
-            this.router.navigateByUrl(returnUrl);
-          });
-      });
+          .subscribe(
+            (jwt: JwtApp) => {
+              localStorage.setItem('access_token', jwt.accessToken);
+              const user: UserApp = new UserApp();
+              user.firstname = googleUser.name.split(' ')[0];
+              user.lastname = googleUser.name.split(' ')[1];
+              user.email = googleUser.email;
+              user.photoUrl = googleUser.photoUrl;
+              user.provider = 'google';
+              this.user.next(user);
+              this.location.replaceState('/');
+              this.router.navigateByUrl(returnUrl);
+            },
+            (err: HttpErrorResponse) => {
+              this.toastr.error('Unexpected error, please try again later');
+              console.log(err);
+            }
+          );
+      },
+      (err: HttpErrorResponse) => {
+        this.toastr.error('Unexpected error, please try again later');
+        console.log(err);
+      }
+    );
   }
 
   signInWithFB(returnUrl?: string): void {
-    this.socialAuthService
-      .signIn(FacebookLoginProvider.PROVIDER_ID)
-      .then((facebookUser: SocialUser) => {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(
+      (facebookUser: SocialUser) => {
         // get api token
         const body: { accessToken: string } = {
           accessToken: facebookUser.authToken
@@ -116,18 +127,29 @@ export class AuthService {
             environment.getSocialSignInEndpoint('facebook'),
             body
           )
-          .subscribe((jwt: JwtApp) => {
-            localStorage.setItem('access_token', jwt.accessToken);
-            const user: UserApp = new UserApp();
-            user.firstname = facebookUser.firstName;
-            user.lastname = facebookUser.lastName;
-            user.email = facebookUser.email;
-            user.photoUrl = facebookUser.photoUrl;
-            user.provider = 'facebook';
-            this.user.next(user);
-            this.location.replaceState('/');
-            this.router.navigateByUrl(returnUrl);
-          });
-      });
+          .subscribe(
+            (jwt: JwtApp) => {
+              localStorage.setItem('access_token', jwt.accessToken);
+              const user: UserApp = new UserApp();
+              user.firstname = facebookUser.firstName;
+              user.lastname = facebookUser.lastName;
+              user.email = facebookUser.email;
+              user.photoUrl = facebookUser.photoUrl;
+              user.provider = 'facebook';
+              this.user.next(user);
+              this.location.replaceState('/');
+              this.router.navigateByUrl(returnUrl);
+            },
+            (err: HttpErrorResponse) => {
+              this.toastr.error('Unexpected error, please try again later');
+              console.log(err);
+            }
+          );
+      },
+      (err: HttpErrorResponse) => {
+        this.toastr.error('Unexpected error, please try again later');
+        console.log(err);
+      }
+    );
   }
 }

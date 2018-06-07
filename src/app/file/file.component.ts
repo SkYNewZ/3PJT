@@ -177,7 +177,7 @@ export class FileComponent implements OnInit, OnDestroy {
    */
   renameEntity(entity: ApiFile | Folder) {
     const dialogRef = this.dialog.open(InputDialogComponent, {
-      width: '250px',
+      width: '500px',
       data: {
         title: `Rename ${entity.mimeType === 'inode/directory' ? 'folder' : 'file'}`,
         buttonOkay: 'Rename',

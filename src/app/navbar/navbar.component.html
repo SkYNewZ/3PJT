@@ -1,10 +1,10 @@
 <ng-container *ngIf="isLoggedIn">
   <mat-toolbar color="primary">
 
-    <button mat-button routerLink="/">
+    <button mat-button routerLink="/my-files">
       <mat-icon>home</mat-icon>
       File Manager</button>
-    <button mat-button routerLink="/">My files</button>
+    <button mat-button routerLink="/my-files">My files</button>
     <button mat-button routerLink="/public">Shared files</button>
     <button mat-button routerLink="/offers">Manage your offer</button>
     <form [formGroup]="searchControl" id="search-box" (ngSubmit)="submitSearch()" *ngIf="isItDeployedInProduction">

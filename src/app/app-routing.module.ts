@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { SharingComponent } from './sharing/sharing.component';
 import { OfferComponent } from './offer/offer.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
   { path: 'my-files', component: FileComponent, canActivate: [AuthGuard] },
@@ -22,9 +23,7 @@ const routes: Routes = [
   { path: 'public', component: SharingComponent },
   { path: 'public/folder/:uuid', component: SharingComponent },
   {
-    path: '',
-    redirectTo: '/my-files',
-    pathMatch: 'full'
+    path: '', component: HomeComponent
   },
   { path: 'folder/:uuid', component: FileComponent, canActivate: [AuthGuard] },
   {

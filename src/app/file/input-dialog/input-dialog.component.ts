@@ -1,15 +1,15 @@
-import { Component, Inject, Input, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-input-dialog',
-  templateUrl: 'input-dialog.html'
+  templateUrl: 'input-dialog.html',
+  styleUrls: ['input-dialog.component.css']
 })
-export class InputDialogComponent implements OnInit, AfterViewChecked {
+export class InputDialogComponent implements OnInit {
 
   public form: FormGroup;
-  @ViewChild('mainInput') input: ElementRef;
 
   constructor(
     public dialogRef: MatDialogRef<InputDialogComponent>,
@@ -25,11 +25,6 @@ export class InputDialogComponent implements OnInit, AfterViewChecked {
     this.form = this.formBuilder.group({
       input: this.data.input
     });
-  }
-
-  ngAfterViewChecked(): void {
-    this.input.nativeElement.focus();
-    this.input.nativeElement.select();
   }
 
   onSubmit(): void {

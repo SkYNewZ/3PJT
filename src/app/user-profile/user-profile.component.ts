@@ -14,7 +14,6 @@ import { Offer } from '../offer/offer';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-
   public user: UserApp = null;
   public form: FormGroup;
   public showLoader: Boolean = true;
@@ -26,17 +25,28 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private routeur: Router,
     private authService: AuthService,
     private userService: UserProfileService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.authService.isLoggedIn.subscribe((user: UserApp) => {
-      this.user = user;
+    this.userService.getUserInfo().subscribe((user: UserApp) => {
+      this.user = UserApp.FROM_JSON(user); // refresh user info each time it consult this page
+      this.authService.login(this.user);
       this.form = this.fb.group({
         firstname: [this.user.firstname, Validators.required],
         lastname: [this.user.lastname, Validators.required],
         // username: [this.user.username, Validators.required],
-        email: [this.user.email, Validators.compose([Validators.required, Validators.email])],
-        password: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(40)])],
+        email: [
+          this.user.email,
+          Validators.compose([Validators.required, Validators.email])
+        ],
+        password: [
+          '',
+          Validators.compose([
+            Validators.required,
+            Validators.minLength(5),
+            Validators.maxLength(40)
+          ])
+        ]
       });
       this.showLoader = false;
     });
@@ -49,33 +59,33 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.formSubmitAttempt = true;
     if (this.form.valid) {
-      this.userService.updateUser(this.form.value).subscribe((user: UserApp) => {
-        const newUser: UserApp = UserApp.FROM_JSON(user);
-        this.authService.login(newUser);
-        this.toastr.success('Success');
-        this.form.get('password').reset();
-        this.formSubmitAttempt = false;
-      }, (err) => {
-        console.log(err);
-      });
+      this.userService.updateUser(this.form.value).subscribe(
+        (user: UserApp) => {
+          const newUser: UserApp = UserApp.FROM_JSON(user);
+          this.authService.login(newUser);
+          this.toastr.success('Success');
+          this.form.get('password').reset();
+          this.formSubmitAttempt = false;
+        },
+        err => {
+          console.log(err);
+        }
+      );
     }
-  }
-
-  manageOffer(event: MouseEvent): void {
-    event.preventDefault();
-    console.log('TODO, mange offer');
   }
 
   public get quota(): number {
     const maxSizeAvailable: number = this.user.offre.maxSize;
     const currentSizeUsed: number = this.user.currentDataSize;
-    const percentage: number = ((currentSizeUsed * 100) / maxSizeAvailable);
+    const percentage: number = (currentSizeUsed * 100) / maxSizeAvailable;
     return Math.round(percentage);
   }
 
   public get formatedQuota(): string {
     const offer: Offer = Offer.FROM_JSON(this.user.offre);
-    return `${this.quota}% - ${this.user.currentDataSizeInGB.toFixed(2)}GB/${offer.maxSizeInGB.toFixed(2)}GB`;
+    return `${this.quota}% - ${this.user.currentDataSizeInGB.toFixed(
+      2
+    )}GB/${offer.maxSizeInGB.toFixed(2)}GB`;
   }
 
   public get formatedFirstnameAndLastname(): string {
@@ -94,5 +104,4 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       (this.form.get(field).untouched && this.formSubmitAttempt)
     );
   }
-
 }
