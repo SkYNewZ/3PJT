@@ -17,6 +17,8 @@ import {
 } from 'angularx-social-login';
 import { Location } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { UserProfileService } from '../user-profile/user-profile.service';
+import { Offer } from '../offer/offer';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +33,8 @@ export class AuthService {
     private http: HttpClient,
     private socialAuthService: SocialAuthService,
     private location: Location,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userService: UserProfileService
   ) {}
 
   public get isLoggedIn(): Observable<UserApp> {
@@ -92,15 +95,19 @@ export class AuthService {
           .subscribe(
             (jwt: JwtApp) => {
               localStorage.setItem('access_token', jwt.accessToken);
-              const user: UserApp = new UserApp();
-              user.firstname = googleUser.name.split(' ')[0];
-              user.lastname = googleUser.name.split(' ')[1];
-              user.email = googleUser.email;
-              user.photoUrl = googleUser.photoUrl;
-              user.provider = 'google';
-              this.user.next(user);
-              this.location.replaceState('/');
-              this.router.navigateByUrl(returnUrl);
+              this.userService.getUserInfo().subscribe((apiUser: UserApp) => {
+                const user: UserApp = new UserApp();
+                user.firstname = googleUser.name.split(' ')[0];
+                user.lastname = googleUser.name.split(' ')[1];
+                user.email = googleUser.email;
+                user.photoUrl = googleUser.photoUrl;
+                user.provider = 'google';
+                user.offre = Offer.FROM_JSON(apiUser.offre);
+                user.currentDataSize = apiUser.currentDataSize;
+                this.user.next(user);
+                this.location.replaceState('/');
+                this.router.navigateByUrl(returnUrl);
+              });
             },
             (err: HttpErrorResponse) => {
               this.toastr.error('Unexpected error, please try again later');
@@ -130,15 +137,19 @@ export class AuthService {
           .subscribe(
             (jwt: JwtApp) => {
               localStorage.setItem('access_token', jwt.accessToken);
-              const user: UserApp = new UserApp();
-              user.firstname = facebookUser.firstName;
-              user.lastname = facebookUser.lastName;
-              user.email = facebookUser.email;
-              user.photoUrl = facebookUser.photoUrl;
-              user.provider = 'facebook';
-              this.user.next(user);
-              this.location.replaceState('/');
-              this.router.navigateByUrl(returnUrl);
+              this.userService.getUserInfo().subscribe((apiUser: UserApp) => {
+                const user: UserApp = new UserApp();
+                user.firstname = facebookUser.firstName;
+                user.lastname = facebookUser.lastName;
+                user.email = facebookUser.email;
+                user.photoUrl = facebookUser.photoUrl;
+                user.provider = 'facebook';
+                user.offre = Offer.FROM_JSON(apiUser.offre);
+                user.currentDataSize = apiUser.currentDataSize;
+                this.user.next(user);
+                this.location.replaceState('/');
+                this.router.navigateByUrl(returnUrl);
+              });
             },
             (err: HttpErrorResponse) => {
               this.toastr.error('Unexpected error, please try again later');
