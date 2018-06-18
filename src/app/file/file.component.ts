@@ -44,7 +44,6 @@ export class FileComponent implements OnInit, OnDestroy {
   private newFileSub: ISubscription;
   private uuidSub: ISubscription;
   public moveToFolders: Folder[] = [];
-  public moveToFoldersFiltered: Folder[] = [];
   public currentFolder: string;
 
   constructor(
@@ -154,6 +153,9 @@ export class FileComponent implements OnInit, OnDestroy {
       if (answer === true) {
         this.fileService.deleteFileOrFolder(entity).subscribe(() => {
           this.dataSource.data = this.dataSource.data.filter(item => item !== entity);
+          if (entity.mimeType === 'inode/directory') {
+            this.moveToFolders = this.moveToFolders.filter(item => item.uuid !== entity.uuid);
+          }
         });
       }
     });
@@ -195,6 +197,9 @@ export class FileComponent implements OnInit, OnDestroy {
         this.fileService.renameFile(entity, name).subscribe((renamedEntity: ApiFile) => {
           entity.name = renamedEntity.name;
           entity.updatedAt = renamedEntity.updatedAt;
+          // rename in the list of available folder to move
+          const idx: number = this.moveToFolders.findIndex(item => item.uuid === entity.uuid);
+          this.moveToFolders[idx].name = renamedEntity.name;
         });
       }
     });
