@@ -55,6 +55,23 @@
                 <button mat-menu-item title="Stop sharing this file" (click)="toggleShare(file)">
                   <mat-icon>link_off</mat-icon> Stop sharing</button>
               </ng-container>
+              <button mat-menu-item title="Move to" [matMenuTriggerFor]="subMenu">
+                <mat-icon>chevron_right</mat-icon> Move to</button>
+            </mat-menu>
+            <mat-menu #subMenu="matMenu">
+                <button mat-menu-item (click)="moveBack(file)" *ngIf="currentFolder">
+                    <mat-icon class="mat-icon-margin">arrow_upward</mat-icon>Move up</button>
+              <ng-container *ngIf="moveToFolders.length > 1; else noFolderToMove">
+                <ng-container *ngFor="let folder of moveToFolders">
+                    <button mat-menu-item (click)="move(file, folder)" *ngIf="file.uuid !== folder.uuid">
+                        <mat-icon style="color: gray" class="mat-icon-margin">folder</mat-icon>
+                        {{ folder.name }}
+                      </button>
+                </ng-container>
+              </ng-container>
+              <ng-template #noFolderToMove>
+                  <button mat-menu-item>No folder to move</button>
+              </ng-template>
             </mat-menu>
           </td>
         </ng-container>

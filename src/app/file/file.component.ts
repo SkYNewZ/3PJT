@@ -43,6 +43,9 @@ export class FileComponent implements OnInit, OnDestroy {
   public showProgressBar: Boolean = false;
   private newFileSub: ISubscription;
   private uuidSub: ISubscription;
+  public moveToFolders: Folder[] = [];
+  public moveToFoldersFiltered: Folder[] = [];
+  public currentFolder: string;
 
   constructor(
     private fileService: FileService,
@@ -58,6 +61,7 @@ export class FileComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.uuidSub = this.route.params.subscribe(params => {
+      this.currentFolder = params['uuid'];
       this.getFiles(params['uuid']);
     });
     this.newFileSub = this.ss.getLastFileUploaded().subscribe((item: ApiFile) => {
@@ -66,6 +70,7 @@ export class FileComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(this.dataSource.data);
       this.orderDatasource();
     });
+    this.initFoldersToMoveDisplay();
   }
 
   ngOnDestroy(): void {
@@ -387,5 +392,34 @@ export class FileComponent implements OnInit, OnDestroy {
     } else {
       return window.location.origin + this.router.createUrlTree(['/public/file', entity.uuid]).toString();
     }
+  }
+
+  /**
+   * Get the list of folders to display in mov emenu
+   */
+  initFoldersToMoveDisplay(): void {
+    this.fileService.getFiles(this.currentFolder).subscribe((list: ApiListElement) => {
+      this.moveToFolders = list.folders;
+    });
+  }
+
+  /**
+   * Move given entity to given folder
+   */
+  move(moveWhat: ApiFile | Folder, moveTo: Folder): void {
+    if (moveTo.mimeType === 'inode/directory') {
+      this.fileService.moveEntity(moveWhat, moveTo).subscribe((movedEntity: ApiFile | Folder) => {
+        this.dataSource.data = this.dataSource.data.filter(item => item.uuid !== movedEntity.uuid);
+      });
+    }
+  }
+
+  /**
+   * Move an entity to previous folder
+   */
+  moveBack(entity: ApiFile | Folder): void {
+    this.fileService.moveBackEntity(entity).subscribe((movedEntity: ApiFile | Folder) => {
+      this.dataSource.data = this.dataSource.data.filter(item => item.uuid !== movedEntity.uuid);
+    });
   }
 }

@@ -110,4 +110,23 @@ export class FileService {
       });
     }
   }
+
+  moveEntity(entity: File | Folder, direction: Folder): Observable<File | Folder> {
+    const body: {uuid: string} = {
+      uuid: direction.uuid
+    };
+    if (entity.mimeType === 'inode/directory') {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.moveFolderEndpoint}/${entity.uuid}`, body);
+    } else {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.moveFileEndpoint}/${entity.uuid}`, body);
+    }
+  }
+
+  moveBackEntity(entity: File | Folder): Observable<File | Folder> {
+    if (entity.mimeType === 'inode/directory') {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.moveBackFolderEndpoint}/${entity.uuid}`, entity);
+    } else {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.moveBackFileEndpoint}/${entity.uuid}`, entity);
+    }
+  }
 }

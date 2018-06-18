@@ -65,6 +65,18 @@ export const environment = {
   // update user offer
   updateUserOfferEndpoint: '/user/offer',
 
+  // move a file (/<UUID> mandatory)
+  moveFileEndpoint: '/files/move',
+
+  // move a folder (/<UUID> mandatory)
+  moveFolderEndpoint: '/folder/move',
+
+  // move back a folder (/<UUID> mandatory)
+  moveBackFolderEndpoint: '/folder/moveback',
+
+  // move back a file (/<UUID> mandatory)
+  moveBackFileEndpoint: '/files/moveback',
+
   getSocialSignInEndpoint(provider: 'facebook' | 'google'): string {
     return `${environment.apiEndoint}/auth/${provider}/signin`;
   },
