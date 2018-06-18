@@ -279,6 +279,7 @@ export class FileComponent implements OnInit, OnDestroy {
             this.dataSource.data.push(folder);
             this.dataSource = new MatTableDataSource(this.dataSource.data);
             this.orderDatasource();
+            this.moveToFolders.push(folder);
           });
       }
     });

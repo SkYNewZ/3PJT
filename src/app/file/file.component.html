@@ -61,7 +61,7 @@
             <mat-menu #subMenu="matMenu">
                 <button mat-menu-item (click)="moveBack(file)" *ngIf="currentFolder">
                     <mat-icon class="mat-icon-margin">arrow_upward</mat-icon>Move up</button>
-              <ng-container *ngIf="moveToFolders.length > 1; else noFolderToMove">
+              <ng-container *ngIf="moveToFolders.length > 0 && moveToFolders[0] !== file; else noFolderToMove">
                 <ng-container *ngFor="let folder of moveToFolders">
                     <button mat-menu-item (click)="move(file, folder)" *ngIf="file.uuid !== folder.uuid">
                         <mat-icon style="color: gray" class="mat-icon-margin">folder</mat-icon>
