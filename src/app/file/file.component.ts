@@ -44,6 +44,7 @@ export class FileComponent implements OnInit, OnDestroy {
   private newFileSub: ISubscription;
   private uuidSub: ISubscription;
   public moveToFolders: Folder[] = [];
+  public moveToFoldersFiltered: Folder[] = [];
   private currentFolder: string;
 
   constructor(
@@ -69,6 +70,7 @@ export class FileComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(this.dataSource.data);
       this.orderDatasource();
     });
+    this.initFoldersToMoveDisplay();
   }
 
   ngOnDestroy(): void {
@@ -392,15 +394,9 @@ export class FileComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleMoveDisplay(entity: Folder): void {
-    // get list of available folders
+  initFoldersToMoveDisplay(): void {
     this.fileService.getFiles(this.currentFolder).subscribe((list: ApiListElement) => {
-      const folders: Folder[] = list.folders;
-      const idx: number = folders.findIndex(f => f.uuid === entity.uuid);
-      if (idx !== -1) {
-        folders.splice(idx, 1);
-      }
-      this.moveToFolders = folders;
+      this.moveToFolders = list.folders;
     });
   }
 
