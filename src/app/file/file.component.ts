@@ -45,7 +45,7 @@ export class FileComponent implements OnInit, OnDestroy {
   private uuidSub: ISubscription;
   public moveToFolders: Folder[] = [];
   public moveToFoldersFiltered: Folder[] = [];
-  private currentFolder: string;
+  public currentFolder: string;
 
   constructor(
     private fileService: FileService,
@@ -394,17 +394,32 @@ export class FileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Get the list of folders to display in mov emenu
+   */
   initFoldersToMoveDisplay(): void {
     this.fileService.getFiles(this.currentFolder).subscribe((list: ApiListElement) => {
       this.moveToFolders = list.folders;
     });
   }
 
+  /**
+   * Move given entity to given folder
+   */
   move(moveWhat: ApiFile | Folder, moveTo: Folder): void {
     if (moveTo.mimeType === 'inode/directory') {
       this.fileService.moveEntity(moveWhat, moveTo).subscribe((movedEntity: ApiFile | Folder) => {
         this.dataSource.data = this.dataSource.data.filter(item => item.uuid !== movedEntity.uuid);
       });
     }
+  }
+
+  /**
+   * Move an entity to previous folder
+   */
+  moveBack(entity: ApiFile | Folder): void {
+    this.fileService.moveBackEntity(entity).subscribe((movedEntity: ApiFile | Folder) => {
+      this.dataSource.data = this.dataSource.data.filter(item => item.uuid !== movedEntity.uuid);
+    });
   }
 }
