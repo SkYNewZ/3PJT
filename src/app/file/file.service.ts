@@ -110,4 +110,15 @@ export class FileService {
       });
     }
   }
+
+  moveEntity(entity: File | Folder, direction: Folder): Observable<File | Folder> {
+    const body: {uuid: string} = {
+      uuid: direction.uuid
+    };
+    if (entity.mimeType === 'inode/directory') {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.moveFolderEndpoint}/${entity.uuid}`, body);
+    } else {
+      return this.http.put<File | Folder>(`${environment.apiEndoint + environment.moveFileEndpoint}/${entity.uuid}`, body);
+    }
+  }
 }

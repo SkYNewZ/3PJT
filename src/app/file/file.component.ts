@@ -43,6 +43,8 @@ export class FileComponent implements OnInit, OnDestroy {
   public showProgressBar: Boolean = false;
   private newFileSub: ISubscription;
   private uuidSub: ISubscription;
+  public moveToFolders: Folder[] = [];
+  private currentFolder: string;
 
   constructor(
     private fileService: FileService,
@@ -58,6 +60,7 @@ export class FileComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.uuidSub = this.route.params.subscribe(params => {
+      this.currentFolder = params['uuid'];
       this.getFiles(params['uuid']);
     });
     this.newFileSub = this.ss.getLastFileUploaded().subscribe((item: ApiFile) => {
@@ -386,6 +389,26 @@ export class FileComponent implements OnInit, OnDestroy {
       return window.location.origin + this.router.createUrlTree(['/public/folder', entity.uuid]).toString();
     } else {
       return window.location.origin + this.router.createUrlTree(['/public/file', entity.uuid]).toString();
+    }
+  }
+
+  toggleMoveDisplay(entity: Folder): void {
+    // get list of available folders
+    this.fileService.getFiles(this.currentFolder).subscribe((list: ApiListElement) => {
+      const folders: Folder[] = list.folders;
+      const idx: number = folders.findIndex(f => f.uuid === entity.uuid);
+      if (idx !== -1) {
+        folders.splice(idx, 1);
+      }
+      this.moveToFolders = folders;
+    });
+  }
+
+  move(moveWhat: ApiFile | Folder, moveTo: Folder): void {
+    if (moveTo.mimeType === 'inode/directory') {
+      this.fileService.moveEntity(moveWhat, moveTo).subscribe((movedEntity: ApiFile | Folder) => {
+        this.dataSource.data = this.dataSource.data.filter(item => item.uuid !== movedEntity.uuid);
+      });
     }
   }
 }
