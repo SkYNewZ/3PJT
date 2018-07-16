@@ -1,6 +1,7 @@
 {
   "name": "supdrive",
   "version": "1.0.8",
+  "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,7 +12,12 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "docker:build": "docker build -t skynewz/supdrive-front .",
-    "docker:run": "docker run -it --rm -p 80:80 skynewz/supdrive-front"
+    "docker:run": "docker run -it --rm -p 80:80 skynewz/supdrive-front",
+    "electron": "electron .",
+    "electron:build": "npm run build:prod && electron .",
+    "electron:linux": "npm run build:prod && electron-packager . --platform=linux --arch=x64 --out=electron",
+    "electron:macos": "npm run build:prod && electron-packager . --platform=darwin --arch=x64 --out=electron",
+    "electron:windows": "npm run build:prod && electron-packager . --platform=win32 --arch=x64 --out=electron"
   },
   "repository": {
     "type": "git",
@@ -63,6 +69,8 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "electron": "^2.0.5",
+    "electron-packager": "^12.1.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^2.0.2",
